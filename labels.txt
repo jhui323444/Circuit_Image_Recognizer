@@ -1,0 +1,11 @@
+resistor
+inductor
+cap
+diode
+dc_src1
+dc_src2
+ac_src
+transistor
+gnd
+NMOS
+switch

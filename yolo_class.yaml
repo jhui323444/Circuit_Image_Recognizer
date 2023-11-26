@@ -1,0 +1,21 @@
+path: /home/jhui323444/capstone/data
+
+train: small_circuits/images/train/
+val: small_circuits/images/val/
+
+#number of classes
+nc: 11
+
+names:
+    0: 'resistor' 
+    1: 'inductor' 
+    2: 'cap'
+    3: 'diode'
+    4: 'dc_src1'
+    5: 'dc_src2'
+    6: 'ac_src'
+    7: 'transistor'
+    8: 'gnd'
+    9: 'NMOS'
+    10: 'switch'
+
