@@ -33,7 +33,7 @@ def igen_frames():
             results = model(frame)[0]
 
             if results:
-                annotated_frame = results[0].plot()
+                annotated_frame = results.plot()
 
                 #display
                 cv.imshow('frame', annotated_frame)
