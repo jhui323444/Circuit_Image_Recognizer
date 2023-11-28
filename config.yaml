@@ -1,21 +1,77 @@
-path: /home/jhui323444/capstone/data
+path: /home/jhui323444/capstone/Circuit_Image_Recognizer/data
 
-train: small_circuits/images/train/
-val: small_circuits/images/val/
+train: cghd/combined/images/
+val: cghd/combined/images/
 
 #number of classes
-nc: 11
+nc: 53
 
 names:
-    0: 'resistor' 
-    1: 'inductor' 
-    2: 'cap'
-    3: 'diode'
-    4: 'dc_src1'
-    5: 'dc_src2'
-    6: 'ac_src'
-    7: 'transistor'
-    8: 'gnd'
-    9: 'NMOS'
-    10: 'switch'
+    0: '__background__' 
+    1: 'text' 
+    2: 'junction'
+    3: 'crossover'
+    4: 'terminal'
+    5: 'gnd'
+    6: 'vss'
+
+    7: 'voltage.dc'
+    8: 'voltage.ac'
+    9: 'voltage.battery'
+
+    10: 'resistor'
+    11: 'resistor.adjustable'
+    12: 'resistor.photo'
+    13: 'capacitor.unpolarized'
+    14: 'capacitor.polarized'
+    
+    15: 'inductor'
+    16: 'transformer'
+
+    17: 'diode'
+    18: 'diode.light_emitting'
+    19: 'diode.thyrector'
+    20: 'diode.zener'
+
+    21: 'diac'
+    22: 'triac'
+    23: 'thyristor'
+    24: 'varistor'
+
+    25: 'transistor.bjt'
+    26: 'transistor.fet'
+    27: 'transistor.photo'
+
+    28: 'operational_amplifier'
+    29: 'operational_amplifier.schmitt_trigger'
+    30: 'optocoupler'
+
+    31: 'integrated_circuit'
+    32: 'integrated_circuit.ne555'
+    33: 'integrated_circuit.voltage_regulator'
+
+    34: 'xor'
+    35: 'and'
+    36: 'or'
+    37: 'not'
+    38: 'nand'
+    39: 'nor'
+
+    40: 'probe.current'
+    41: 'probe.voltage'
+
+    42: 'switch'
+    43: 'relay'
+
+    44: 'socket'
+    45: 'fuse'
+
+    46: 'speaker'
+    47: 'motor'
+    48: 'lamp'
+    49: 'microphone'
+    50: 'antenna'
+    51: 'crystal'
+
+    52: 'unknown'
 

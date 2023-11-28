@@ -1,0 +1,200 @@
+2023-11-27 23:26:52,281 INFO    StreamThr :28897 [internal.py:wandb_internal():86] W&B internal server running at pid: 28897, started at: 2023-11-27 23:26:52.280628
+2023-11-27 23:26:52,282 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status
+2023-11-27 23:26:52,285 INFO    WriterThread:28897 [datastore.py:open_for_write():85] open: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/run-05k9eoil.wandb
+2023-11-27 23:26:52,285 DEBUG   SenderThread:28897 [sender.py:send():369] send: header
+2023-11-27 23:26:52,299 DEBUG   SenderThread:28897 [sender.py:send():369] send: run
+2023-11-27 23:26:52,640 INFO    SenderThread:28897 [dir_watcher.py:__init__():211] watching files in: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files
+2023-11-27 23:26:52,640 INFO    SenderThread:28897 [sender.py:_start_run_threads():1100] run started: 05k9eoil with start time 1701156412.280415
+2023-11-27 23:26:52,640 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: summary_record
+2023-11-27 23:26:52,641 INFO    SenderThread:28897 [sender.py:_save_file():1354] saving file wandb-summary.json with policy end
+2023-11-27 23:26:52,646 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: check_version
+2023-11-27 23:26:52,646 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: check_version
+2023-11-27 23:26:52,712 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: run_start
+2023-11-27 23:26:52,724 DEBUG   HandlerThread:28897 [system_info.py:__init__():31] System info init
+2023-11-27 23:26:52,725 DEBUG   HandlerThread:28897 [system_info.py:__init__():46] System info init done
+2023-11-27 23:26:52,725 INFO    HandlerThread:28897 [system_monitor.py:start():181] Starting system monitor
+2023-11-27 23:26:52,725 INFO    SystemMonitor:28897 [system_monitor.py:_start():145] Starting system asset monitoring threads
+2023-11-27 23:26:52,726 INFO    HandlerThread:28897 [system_monitor.py:probe():201] Collecting system info
+2023-11-27 23:26:52,727 INFO    SystemMonitor:28897 [interfaces.py:start():190] Started cpu monitoring
+2023-11-27 23:26:52,727 INFO    SystemMonitor:28897 [interfaces.py:start():190] Started disk monitoring
+2023-11-27 23:26:52,729 INFO    SystemMonitor:28897 [interfaces.py:start():190] Started gpu monitoring
+2023-11-27 23:26:52,729 INFO    SystemMonitor:28897 [interfaces.py:start():190] Started memory monitoring
+2023-11-27 23:26:52,730 INFO    SystemMonitor:28897 [interfaces.py:start():190] Started network monitoring
+2023-11-27 23:26:52,735 DEBUG   HandlerThread:28897 [system_info.py:probe():195] Probing system
+2023-11-27 23:26:52,787 DEBUG   HandlerThread:28897 [system_info.py:_probe_git():180] Probing git
+2023-11-27 23:26:52,796 DEBUG   HandlerThread:28897 [system_info.py:_probe_git():188] Probing git done
+2023-11-27 23:26:52,796 DEBUG   HandlerThread:28897 [system_info.py:probe():240] Probing system done
+2023-11-27 23:26:52,796 DEBUG   HandlerThread:28897 [system_monitor.py:probe():210] {'os': 'Linux-5.10.16.3-microsoft-standard-WSL2-x86_64-with-glibc2.17', 'python': '3.8.18', 'heartbeatAt': '2023-11-28T07:26:52.735744', 'startedAt': '2023-11-28T07:26:52.274881', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': 'yolotrain.py', 'codePath': 'yolotrain.py', 'git': {'remote': 'https://github.com/jhui323444/Circuit_Image_Recognizer.git', 'commit': '955387e226353376afcfd205f30d46e654a8b7b3'}, 'email': None, 'root': '/home/jhui323444/capstone/Circuit_Image_Recognizer', 'host': 'DESKTOP-659QP78', 'username': 'jhui323444', 'executable': '/home/jhui323444/anaconda3/envs/capstone/bin/python', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 3792.981, 'min': 0.0, 'max': 0.0}, 'cpu_freq_per_core': [{'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}, {'current': 3792.981, 'min': 0.0, 'max': 0.0}], 'disk': {'total': 250.98248672485352, 'used': 56.91371536254883}, 'gpu': 'NVIDIA GeForce RTX 2070 SUPER', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 2070 SUPER', 'memory_total': 8589934592}], 'memory': {'total': 12.426624298095703}}
+2023-11-27 23:26:52,796 INFO    HandlerThread:28897 [system_monitor.py:probe():211] Finished collecting system info
+2023-11-27 23:26:52,796 INFO    HandlerThread:28897 [system_monitor.py:probe():214] Publishing system info
+2023-11-27 23:26:52,796 DEBUG   HandlerThread:28897 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-11-27 23:26:52,796 DEBUG   HandlerThread:28897 [system_info.py:_save_pip():67] Saving pip packages done
+2023-11-27 23:26:52,796 DEBUG   HandlerThread:28897 [system_info.py:_save_conda():74] Saving list of conda packages installed into the current environment
+2023-11-27 23:26:53,642 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_created():272] file/dir created: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/requirements.txt
+2023-11-27 23:26:53,642 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_created():272] file/dir created: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/conda-environment.yaml
+2023-11-27 23:26:53,642 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_created():272] file/dir created: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/wandb-summary.json
+2023-11-27 23:26:54,259 DEBUG   HandlerThread:28897 [system_info.py:_save_conda():86] Saving conda packages done
+2023-11-27 23:26:54,260 INFO    HandlerThread:28897 [system_monitor.py:probe():216] Finished publishing system info
+2023-11-27 23:26:54,263 DEBUG   SenderThread:28897 [sender.py:send():369] send: files
+2023-11-27 23:26:54,264 INFO    SenderThread:28897 [sender.py:_save_file():1354] saving file wandb-metadata.json with policy now
+2023-11-27 23:26:54,269 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: stop_status
+2023-11-27 23:26:54,269 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: stop_status
+2023-11-27 23:26:54,441 DEBUG   SenderThread:28897 [sender.py:send():369] send: telemetry
+2023-11-27 23:26:54,642 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/conda-environment.yaml
+2023-11-27 23:26:54,642 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_created():272] file/dir created: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/wandb-metadata.json
+2023-11-27 23:26:54,703 INFO    wandb-upload_0:28897 [upload_job.py:push():133] Uploaded file /tmp/tmpr_nhe3vuwandb/te77ibpw-wandb-metadata.json
+2023-11-27 23:26:56,643 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_created():272] file/dir created: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:26:57,396 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status_report
+2023-11-27 23:26:58,644 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:00,644 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:02,645 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:03,048 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status_report
+2023-11-27 23:27:04,646 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:08,314 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status_report
+2023-11-27 23:27:08,650 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:09,271 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: stop_status
+2023-11-27 23:27:09,272 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: stop_status
+2023-11-27 23:27:13,433 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status_report
+2023-11-27 23:27:18,971 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status_report
+2023-11-27 23:27:20,659 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:23,985 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status_report
+2023-11-27 23:27:24,149 DEBUG   SenderThread:28897 [sender.py:send():369] send: exit
+2023-11-27 23:27:24,149 INFO    SenderThread:28897 [sender.py:send_exit():574] handling exit code: 1
+2023-11-27 23:27:24,150 INFO    SenderThread:28897 [sender.py:send_exit():576] handling runtime: 31
+2023-11-27 23:27:24,150 INFO    SenderThread:28897 [sender.py:_save_file():1354] saving file wandb-summary.json with policy end
+2023-11-27 23:27:24,150 INFO    SenderThread:28897 [sender.py:send_exit():582] send defer
+2023-11-27 23:27:24,150 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,151 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 0
+2023-11-27 23:27:24,151 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,151 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 0
+2023-11-27 23:27:24,151 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 1
+2023-11-27 23:27:24,152 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,152 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 1
+2023-11-27 23:27:24,152 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,152 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 1
+2023-11-27 23:27:24,152 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 2
+2023-11-27 23:27:24,152 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,152 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 2
+2023-11-27 23:27:24,152 INFO    HandlerThread:28897 [system_monitor.py:finish():190] Stopping system monitor
+2023-11-27 23:27:24,152 DEBUG   SystemMonitor:28897 [system_monitor.py:_start():159] Starting system metrics aggregation loop
+2023-11-27 23:27:24,152 DEBUG   SystemMonitor:28897 [system_monitor.py:_start():166] Finished system metrics aggregation loop
+2023-11-27 23:27:24,152 DEBUG   SystemMonitor:28897 [system_monitor.py:_start():170] Publishing last batch of metrics
+2023-11-27 23:27:24,153 INFO    HandlerThread:28897 [interfaces.py:finish():202] Joined cpu monitor
+2023-11-27 23:27:24,154 INFO    HandlerThread:28897 [interfaces.py:finish():202] Joined disk monitor
+2023-11-27 23:27:24,176 INFO    HandlerThread:28897 [interfaces.py:finish():202] Joined gpu monitor
+2023-11-27 23:27:24,177 INFO    HandlerThread:28897 [interfaces.py:finish():202] Joined memory monitor
+2023-11-27 23:27:24,177 INFO    HandlerThread:28897 [interfaces.py:finish():202] Joined network monitor
+2023-11-27 23:27:24,178 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,178 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 2
+2023-11-27 23:27:24,178 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 3
+2023-11-27 23:27:24,178 DEBUG   SenderThread:28897 [sender.py:send():369] send: stats
+2023-11-27 23:27:24,178 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,179 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 3
+2023-11-27 23:27:24,180 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,180 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 3
+2023-11-27 23:27:24,180 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 4
+2023-11-27 23:27:24,180 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,180 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 4
+2023-11-27 23:27:24,181 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,181 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 4
+2023-11-27 23:27:24,181 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 5
+2023-11-27 23:27:24,181 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,181 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 5
+2023-11-27 23:27:24,182 DEBUG   SenderThread:28897 [sender.py:send():369] send: summary
+2023-11-27 23:27:24,182 INFO    SenderThread:28897 [sender.py:_save_file():1354] saving file wandb-summary.json with policy end
+2023-11-27 23:27:24,182 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,182 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 5
+2023-11-27 23:27:24,182 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 6
+2023-11-27 23:27:24,183 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,183 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 6
+2023-11-27 23:27:24,183 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,183 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 6
+2023-11-27 23:27:24,183 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 7
+2023-11-27 23:27:24,184 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: status_report
+2023-11-27 23:27:24,184 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:24,184 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 7
+2023-11-27 23:27:24,184 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:24,185 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 7
+2023-11-27 23:27:24,661 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/config.yaml
+2023-11-27 23:27:24,662 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/wandb-summary.json
+2023-11-27 23:27:25,150 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: poll_exit
+2023-11-27 23:27:25,813 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 8
+2023-11-27 23:27:25,813 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: poll_exit
+2023-11-27 23:27:25,814 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:25,814 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 8
+2023-11-27 23:27:25,815 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:25,815 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 8
+2023-11-27 23:27:25,815 INFO    SenderThread:28897 [job_builder.py:build():240] Attempting to build job artifact
+2023-11-27 23:27:25,816 INFO    SenderThread:28897 [job_builder.py:build():264] is repo sourced job
+2023-11-27 23:27:25,818 INFO    SenderThread:28897 [job_builder.py:build():305] adding wandb-job metadata file
+2023-11-27 23:27:25,825 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 9
+2023-11-27 23:27:25,825 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:25,826 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 9
+2023-11-27 23:27:25,826 DEBUG   SenderThread:28897 [sender.py:send():369] send: artifact
+2023-11-27 23:27:26,151 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: poll_exit
+2023-11-27 23:27:26,321 INFO    SenderThread:28897 [sender.py:send_artifact():1450] sent artifact job-https___github.com_jhui323444_Circuit_Image_Recognizer.git_yolotrain.py - {'id': 'QXJ0aWZhY3Q6NjUxMzMwODAx', 'digest': '4adfbf486594205c09042b2e3f9ee76f', 'state': 'COMMITTED', 'aliases': [{'artifactCollectionName': 'job-https___github.com_jhui323444_Circuit_Image_Recognizer.git_yolotrain.py', 'alias': 'latest'}, {'artifactCollectionName': 'job-https___github.com_jhui323444_Circuit_Image_Recognizer.git_yolotrain.py', 'alias': 'v0'}], 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjExOTMxMDUyNg==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NjUxMzMwODAx', 'versionIndex': 0}}, 'version': 'v0'}
+2023-11-27 23:27:26,321 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:26,321 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 9
+2023-11-27 23:27:26,321 INFO    SenderThread:28897 [dir_watcher.py:finish():359] shutting down directory watcher
+2023-11-27 23:27:26,662 INFO    Thread-12 :28897 [dir_watcher.py:_on_file_modified():289] file/dir modified: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:26,663 INFO    SenderThread:28897 [dir_watcher.py:finish():389] scan: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files
+2023-11-27 23:27:26,663 INFO    SenderThread:28897 [dir_watcher.py:finish():403] scan save: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log output.log
+2023-11-27 23:27:26,663 INFO    SenderThread:28897 [dir_watcher.py:finish():403] scan save: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/conda-environment.yaml conda-environment.yaml
+2023-11-27 23:27:26,663 INFO    SenderThread:28897 [dir_watcher.py:finish():403] scan save: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/config.yaml config.yaml
+2023-11-27 23:27:26,667 INFO    SenderThread:28897 [dir_watcher.py:finish():403] scan save: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/wandb-metadata.json wandb-metadata.json
+2023-11-27 23:27:26,670 INFO    SenderThread:28897 [dir_watcher.py:finish():403] scan save: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/requirements.txt requirements.txt
+2023-11-27 23:27:26,671 INFO    SenderThread:28897 [dir_watcher.py:finish():403] scan save: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/wandb-summary.json wandb-summary.json
+2023-11-27 23:27:26,674 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 10
+2023-11-27 23:27:26,674 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: poll_exit
+2023-11-27 23:27:26,677 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:26,680 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 10
+2023-11-27 23:27:26,682 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:26,682 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 10
+2023-11-27 23:27:26,682 INFO    SenderThread:28897 [file_pusher.py:finish():159] shutting down file pusher
+2023-11-27 23:27:27,002 INFO    wandb-upload_1:28897 [upload_job.py:push():133] Uploaded file /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/conda-environment.yaml
+2023-11-27 23:27:27,069 INFO    wandb-upload_0:28897 [upload_job.py:push():133] Uploaded file /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/output.log
+2023-11-27 23:27:27,152 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: poll_exit
+2023-11-27 23:27:27,152 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: poll_exit
+2023-11-27 23:27:27,223 INFO    wandb-upload_2:28897 [upload_job.py:push():133] Uploaded file /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/config.yaml
+2023-11-27 23:27:27,232 INFO    wandb-upload_3:28897 [upload_job.py:push():133] Uploaded file /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/requirements.txt
+2023-11-27 23:27:27,250 INFO    wandb-upload_4:28897 [upload_job.py:push():133] Uploaded file /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/files/wandb-summary.json
+2023-11-27 23:27:27,450 INFO    Thread-11 :28897 [sender.py:transition_state():602] send defer: 11
+2023-11-27 23:27:27,451 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:27,451 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 11
+2023-11-27 23:27:27,451 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:27,451 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 11
+2023-11-27 23:27:27,452 INFO    SenderThread:28897 [file_pusher.py:join():164] waiting for file pusher
+2023-11-27 23:27:27,452 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 12
+2023-11-27 23:27:27,452 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:27,452 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 12
+2023-11-27 23:27:27,452 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:27,452 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 12
+2023-11-27 23:27:27,548 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 13
+2023-11-27 23:27:27,549 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:27,549 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 13
+2023-11-27 23:27:27,549 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:27,549 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 13
+2023-11-27 23:27:27,549 INFO    SenderThread:28897 [sender.py:transition_state():602] send defer: 14
+2023-11-27 23:27:27,549 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: defer
+2023-11-27 23:27:27,550 INFO    HandlerThread:28897 [handler.py:handle_request_defer():170] handle defer: 14
+2023-11-27 23:27:27,550 DEBUG   SenderThread:28897 [sender.py:send():369] send: final
+2023-11-27 23:27:27,550 DEBUG   SenderThread:28897 [sender.py:send():369] send: footer
+2023-11-27 23:27:27,551 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: defer
+2023-11-27 23:27:27,551 INFO    SenderThread:28897 [sender.py:send_request_defer():598] handle sender defer: 14
+2023-11-27 23:27:27,551 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: poll_exit
+2023-11-27 23:27:27,552 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: poll_exit
+2023-11-27 23:27:27,552 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: poll_exit
+2023-11-27 23:27:27,553 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: poll_exit
+2023-11-27 23:27:27,554 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: server_info
+2023-11-27 23:27:27,554 DEBUG   SenderThread:28897 [sender.py:send_request():396] send_request: server_info
+2023-11-27 23:27:27,557 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: get_summary
+2023-11-27 23:27:27,558 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: sampled_history
+2023-11-27 23:27:27,620 INFO    MainThread:28897 [wandb_run.py:_footer_history_summary_info():3464] rendering history
+2023-11-27 23:27:27,620 INFO    MainThread:28897 [wandb_run.py:_footer_history_summary_info():3496] rendering summary
+2023-11-27 23:27:27,620 INFO    MainThread:28897 [wandb_run.py:_footer_sync_info():3423] logging synced files
+2023-11-27 23:27:27,621 DEBUG   HandlerThread:28897 [handler.py:handle_request():144] handle_request: shutdown
+2023-11-27 23:27:27,621 INFO    HandlerThread:28897 [handler.py:finish():854] shutting down handler
+2023-11-27 23:27:28,554 INFO    WriterThread:28897 [datastore.py:close():298] close: /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_232652-05k9eoil/run-05k9eoil.wandb
+2023-11-27 23:27:28,620 INFO    SenderThread:28897 [sender.py:finish():1526] shutting down sender
+2023-11-27 23:27:28,620 INFO    SenderThread:28897 [file_pusher.py:finish():159] shutting down file pusher
+2023-11-27 23:27:28,620 INFO    SenderThread:28897 [file_pusher.py:join():164] waiting for file pusher
