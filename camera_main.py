@@ -30,13 +30,21 @@ def igen_frames():
             #do operations here
             #detections = coco_model(frame)[0]
 
-            results = model(frame)[0]
+            results = model(frame)
+            annotated_frame_arr = 
 
             if results:
-                annotated_frame = results.plot()
-
+                for r in results:
+                    if r.boxes.cls.all() != 1 and r.boxes.cls.all() != 2:
+                        print(f'\n{r.boxes.cls}\n')
+                        annotated_frame_arr = r.plot()
+                        
+                    
                 #display
-                cv.imshow('frame', annotated_frame)
+                if annotated_frame_arr.any():
+                    cv.imshow('frame', annotated_frame_arr)
+                else:
+                    cv.imshow('frame', frame)
             else:
                 cv.imshow('frame', frame)
 
