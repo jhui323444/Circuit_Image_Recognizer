@@ -11,10 +11,8 @@ def igen_frames():
         print('Cannot Open Camera')
         exit()
 
-    delay = 0
-
     model = YOLO('yolov8n.pt')
-    model = YOLO('./weights/best.pt')
+    model = YOLO('./runs/detect/train8/weights/best.pt')
 
     while cap.isOpened():
         #capture frame
@@ -30,24 +28,21 @@ def igen_frames():
             #do operations here
             #detections = coco_model(frame)[0]
 
-            results = model(frame)
-            annotated_frame_arr = 
+            results = model.predict(frame, conf=0.5, max_det=20, classes=list(range(3,52)))
+
+            #annotated_frame_arr = frame 
 
             if results:
-                for r in results:
-                    if r.boxes.cls.all() != 1 and r.boxes.cls.all() != 2:
-                        print(f'\n{r.boxes.cls}\n')
-                        annotated_frame_arr = r.plot()
-                        
-                    
+                annotated_frame = results[0].plot()
+                
+
                 #display
-                if annotated_frame_arr.any():
-                    cv.imshow('frame', annotated_frame_arr)
-                else:
-                    cv.imshow('frame', frame)
+                cv.imshow('frame', annotated_frame)
+
             else:
                 cv.imshow('frame', frame)
-
+            
+            
             if cv.waitKey(1) == ord('q'):
                 break
 
