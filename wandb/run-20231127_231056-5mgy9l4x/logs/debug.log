@@ -1,0 +1,29 @@
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Current SDK version is 0.15.5
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Configure stats pid to 611
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Loading settings from /home/jhui323444/.config/wandb/settings
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Loading settings from /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/settings
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'yolotrain.py', 'program': 'yolotrain.py'}
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_init.py:_log_setup():507] Logging user logs to /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_231056-5mgy9l4x/logs/debug.log
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_init.py:_log_setup():508] Logging internal logs to /home/jhui323444/capstone/Circuit_Image_Recognizer/wandb/run-20231127_231056-5mgy9l4x/logs/debug-internal.log
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_init.py:init():547] calling init triggers
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_init.py:init():554] wandb.init called with sweep_config: {}
+config: {'task': 'detect', 'mode': 'train', 'model': 'yolov8n.yaml', 'data': 'config.yaml', 'epochs': 100, 'patience': 50, 'batch': 16, 'imgsz': 640, 'save': True, 'save_period': -1, 'cache': False, 'device': None, 'workers': 8, 'project': None, 'name': 'train5', 'exist_ok': False, 'pretrained': True, 'optimizer': 'auto', 'verbose': True, 'seed': 0, 'deterministic': True, 'single_cls': False, 'rect': False, 'cos_lr': False, 'close_mosaic': 10, 'resume': False, 'amp': True, 'fraction': 1.0, 'profile': False, 'freeze': None, 'overlap_mask': True, 'mask_ratio': 4, 'dropout': 0.0, 'val': True, 'split': 'val', 'save_json': False, 'save_hybrid': False, 'conf': None, 'iou': 0.7, 'max_det': 300, 'half': False, 'dnn': False, 'plots': True, 'source': None, 'vid_stride': 1, 'stream_buffer': False, 'visualize': False, 'augment': False, 'agnostic_nms': False, 'classes': None, 'retina_masks': False, 'show': False, 'save_frames': False, 'save_txt': False, 'save_conf': False, 'save_crop': False, 'show_labels': True, 'show_conf': True, 'show_boxes': True, 'line_width': None, 'format': 'torchscript', 'keras': False, 'optimize': False, 'int8': False, 'dynamic': False, 'simplify': False, 'opset': None, 'workspace': 4, 'nms': False, 'lr0': 0.01, 'lrf': 0.01, 'momentum': 0.937, 'weight_decay': 0.0005, 'warmup_epochs': 3.0, 'warmup_momentum': 0.8, 'warmup_bias_lr': 0.1, 'box': 7.5, 'cls': 0.5, 'dfl': 1.5, 'pose': 12.0, 'kobj': 1.0, 'label_smoothing': 0.0, 'nbs': 64, 'hsv_h': 0.015, 'hsv_s': 0.7, 'hsv_v': 0.4, 'degrees': 0.0, 'translate': 0.1, 'scale': 0.5, 'shear': 0.0, 'perspective': 0.0, 'flipud': 0.0, 'fliplr': 0.5, 'mosaic': 1.0, 'mixup': 0.0, 'copy_paste': 0.0, 'cfg': None, 'tracker': 'botsort.yaml', 'save_dir': 'runs/detect/train5'}
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_init.py:init():596] starting backend
+2023-11-27 23:10:56,050 INFO    MainThread:611 [wandb_init.py:init():600] setting up manager
+2023-11-27 23:10:56,052 INFO    MainThread:611 [backend.py:_multiprocessing_setup():106] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2023-11-27 23:10:56,054 INFO    MainThread:611 [wandb_init.py:init():606] backend started and connected
+2023-11-27 23:10:56,056 INFO    MainThread:611 [wandb_init.py:init():705] updated telemetry
+2023-11-27 23:10:56,068 INFO    MainThread:611 [wandb_init.py:init():738] communicating run to backend with 60.0 second timeout
+2023-11-27 23:10:56,424 INFO    MainThread:611 [wandb_run.py:_on_init():2173] communicating current version
+2023-11-27 23:10:56,484 INFO    MainThread:611 [wandb_run.py:_on_init():2182] got version response upgrade_message: "wandb version 0.16.0 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2023-11-27 23:10:56,485 INFO    MainThread:611 [wandb_init.py:init():789] starting run threads in backend
+2023-11-27 23:10:57,917 INFO    MainThread:611 [wandb_run.py:_console_start():2152] atexit reg
+2023-11-27 23:10:57,917 INFO    MainThread:611 [wandb_run.py:_redirect():2007] redirect: SettingsConsole.WRAP_RAW
+2023-11-27 23:10:57,917 INFO    MainThread:611 [wandb_run.py:_redirect():2072] Wrapping output streams.
+2023-11-27 23:10:57,917 INFO    MainThread:611 [wandb_run.py:_redirect():2097] Redirects installed.
+2023-11-27 23:10:57,918 INFO    MainThread:611 [wandb_init.py:init():830] run started, returning control to user process
+2023-11-27 23:16:36,817 WARNING MsgRouterThr:611 [router.py:message_loop():77] message_loop has been closed
