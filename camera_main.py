@@ -1,7 +1,7 @@
 import numpy as np
 import cv2 as cv
 from ultralytics import YOLO
-
+import sys
 
 def igen_frames():
     cap = cv.VideoCapture(0, cv.CAP_V4L2)
@@ -28,7 +28,7 @@ def igen_frames():
             #do operations here
             #detections = coco_model(frame)[0]
 
-            results = model.predict(frame, conf=0.5, max_det=20, classes=list(range(3,52)))
+            results = model.predict(frame, conf=0.5, max_det=20, classes=[1]+list(range(3,52)))
 
             #annotated_frame_arr = frame 
 
@@ -49,4 +49,33 @@ def igen_frames():
     cap.release()
     cv.destroyAllWindows()
 
-igen_frames()
+def run_model(path):
+    model = YOLO('yolov8n.pt')
+    model = YOLO('./runs/detect/train8/weights/best.pt')
+
+    frame = cv.imread(path)
+
+    results = model.predict(frame, conf=0.5, max_det=20, classes=[1]+list(range(3,52)))
+
+    annotated_frame = results[0].plot()
+
+    cv.imwrite('predicted.jpg', annotated_frame)
+    print('Saved image to: predicted.jpg')
+
+
+
+def main():
+    if sys.argv[1]:
+        run_model(sys.argv[1])
+    else:
+        userin = int(input('do you want to use the camera(1), or analyze an image in the directory(2): '))
+        if userin == 1:
+            igen_frames()
+        elif userin == 2:
+            img_path = input('Please enter image path: ') 
+            run_model(img_path)
+        else:
+            print('non valid option, exiting program...')
+
+if __name__=='__main__':
+    main()
