@@ -3,34 +3,28 @@ import cv2
 import numpy as np
 import os
 from collections import defaultdict
-# image path
-
-# Reading an image in default mode:
-inputImage = cv2.imread("empty2.jpg")
-path = '/mnt/c/Users/antho/Anthony Stuff/UCI Classes/EECS/EECS 159/output_images'
-
-scalePercent = 50  
-width = int(inputImage.shape[1] * scalePercent / 100)
-height = int(inputImage.shape[0] * scalePercent / 100)
 
 
-def resizeImage(image, path):
+
+
+def resizeImage(image, path, scalePercent=50):
     # Resize image:
-    scalePercent = 50  # percent of original size
-    width = int(inputImage.shape[1] * scalePercent / 100)
-    height = int(inputImage.shape[0] * scalePercent / 100)
+    width = int(image.shape[1] * scalePercent / 100)
+    height = int(image.shape[0] * scalePercent / 100)
 
     # New dimensions:
     dim = (width, height)
 
     # resize image
-    resizedImage = cv2.resize(inputImage, dim, interpolation=cv2.INTER_AREA)
-    return resizedImage
+    resizedImage = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+    cv2.imwrite(os.path.join(path, "resized.jpg"), resizedImage)
+    return resizedImage, width, height
 
 def thresholdImage(resizedImage, path):
     # Color conversion
     grayscaleImage = cv2.cvtColor(resizedImage, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(grayscaleImage, (9,9),0)
+
     cv2.imwrite(os.path.join(path, "blur.jpg") , blur)
 
     thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
@@ -65,7 +59,7 @@ def thresholdImage(resizedImage, path):
     return imgFiltered
 
 
-def getContours(imgFiltered):
+def getContours(imgFiltered, path):
         # Find contours of nodes
     contours ,hierarchy = cv2.findContours(imgFiltered, \
                                         cv2.RETR_EXTERNAL, \
@@ -78,15 +72,15 @@ def getContours(imgFiltered):
     # Draws contours (large enough) onto black image
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        print(f'Contour area: {area}')
+        #print(f'Contour area: {area}')
         if area < 80:
             continue
-        cv2.drawContours(out, [cnt], 0, (255, 255, 255), 3)
+        cv2.drawContours(out, [cnt], 0, (255, 255, 255), -1)
     cv2.imwrite(os.path.join(path,"contours.jpg"), out)
     return out, contours
 # Take in filtered image and find endpoints
 def getEndPoints(imgFiltered, path):
-    out, contours = getContours(imgFiltered)
+    out, contours = getContours(imgFiltered, path)
     cont_thinned = cv2.ximgproc.thinning(out, None, 1)
     kernel = np.uint8([[1, 1, 1],
                 [1, 10, 1],
@@ -118,10 +112,11 @@ def getCentroidsDict(endPointsMask):
     # Set operation iterations:
     opIterations = 3
     # Get the structuring element:
-    maxKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (kernelSize, kernelSize))
+    maxKernel = \
+    cv2.getStructuringElement(cv2.MORPH_RECT, (kernelSize, kernelSize))
     # Perform dilate:
     groupsMask = cv2.morphologyEx(groupsMask, cv2.MORPH_DILATE, maxKernel, \
-                                None, None, opIterations, cv2.BORDER_REFLECT101)
+                            None, None, opIterations, cv2.BORDER_REFLECT101)
 
     # Set the centroids Dictionary:
     centroidsDictionary = {}
@@ -175,8 +170,9 @@ def getCentroidsDict(endPointsMask):
     return centroidsDictionary
 
 # takes in centroids dict, contours, and resized image
-def get_node_Dict(centroidsDictionary, image, contours):
+def get_node_Dict(centroidsDictionary, image, contours,width, height):
     nodeDictionary = {}
+    points = {}
     endsCounter = 0
     for k in centroidsDictionary:
         # Get the value of the current key:
@@ -198,37 +194,53 @@ def get_node_Dict(centroidsDictionary, image, contours):
             if cv2.contourArea(c) > 80:
                 cv2.drawContours(checkContour, [c], 0, (255, 255, 255), 3)
             color = checkContour[cy, cx]
-            print(color)
+            #print(color)
 
             # If pixel at node end is white after drawing a contour, then point belongs to that node
             if color == 255:
-                print(f'YES! WOOOOOO: {contourCounter}; x:{cx} y:{cy}')
+                #print(f'YES! WOOOOOO: {contourCounter}; x:{cx} y:{cy}')
                 nodeDictionary[endsCounter] = contourCounter
+                points[endsCounter] = (cx, cy)
                 endsCounter += 1
+                #print(f'x: {cx}, y: {cy}')
                 break
 
             contourCounter += 1
 
-    return nodeDictionary
+    return nodeDictionary, points
 
-resizedImage = resizeImage(inputImage, path)
-imgFiltered = thresholdImage(resizedImage, path)
-endPointsMask = getEndPoints(imgFiltered, path)
-centroidsDictionary = getCentroidsDict(endPointsMask)
-out, contours = getContours(imgFiltered)
-nodeDictionary = get_node_Dict(centroidsDictionary, resizedImage, contours)
+if __name__ == '__main__':
+    # Reading an image in default mode:
+    inputImage = cv2.imread("empty4.jpg")
+    path = \
+    '/mnt/c/Users/antho/Anthony Stuff/UCI Classes/EECS/EECS 159/output_images'
+    print(path)
 
-#cv2.imwrite(os.path.join(path, "Centroids and Contour.jpg"), out)
 
-cv2.imwrite(os.path.join(path, "Final Centroids.jpg"), resizedImage)
+    resizedImage, width, height = resizeImage(inputImage, path, 25)
+    imgFiltered = thresholdImage(resizedImage, path)
+    endPointsMask = getEndPoints(imgFiltered, path)
+    centroidsDictionary = getCentroidsDict(endPointsMask)
+    out, contours = getContours(imgFiltered, path)
+    nodeDictionary, points = get_node_Dict(centroidsDictionary, resizedImage, \
+                                   contours, width, height)
 
-print(f'H: {height}, W: {width}')
-print(centroidsDictionary)
-print(nodeDictionary)
+    #cv2.imwrite(os.path.join(path, "Centroids and Contour.jpg"), out)
+    # print(points)
+    # cx, cy = points[4]
+    # test = cv2.line(resizedImage, (0, cy), (width, cy), (0,0,255), 3)
+    # cv2.imwrite(os.path.join(path, "linestest.jpg"), test)
+    cv2.imwrite(os.path.join(path, "Final Centroids.jpg"), resizedImage)
+    if not cv2.imwrite(os.path.join(path, "huh.jpg"), resizedImage):
+        raise Exception("why no image")
+    #print(f'H: {height}, W: {width}')
+    #print(centroidsDictionary)
+    #print(nodeDictionary)
 
-connectivityMap = {}
-for key, value in nodeDictionary.items():
-    connectivityMap.setdefault(value, set()).add(key)
+    connectivityMap = {}
+    for key, value in nodeDictionary.items():
+        connectivityMap.setdefault(value, set()).add(key)
 
-print(connectivityMap)
+    print(connectivityMap)
+
 

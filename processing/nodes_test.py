@@ -6,6 +6,7 @@ from pylsd import lsd
 
 path = '/mnt/c/Users/antho/Anthony Stuff/UCI Classes/EECS/EECS 159/nodes_out'
 image = cv.imread('empty4.jpg')
+
 # Resize image to maintain consistency and reduce noise (Refer to document)
 image = cv.resize(image, (750, 1000))
 
