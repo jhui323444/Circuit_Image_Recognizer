@@ -59,13 +59,34 @@ def run_model(path):
 
     annotated_frame = results[0].plot()
 
+    grayscaleImage = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    blur = cv.GaussianBlur(grayscaleImage, (9,9),0)
+    thresh = cv.adaptiveThreshold(blur, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 11, 2)
+
+    cleared = thresh.copy()
+
+    for r in results:
+        #print(r.boxes)
+        #print(r.boxes.xyxy)
+        for x in r.boxes.xyxy:
+            print(round(x[0].item()))
+            print(x[1])
+            coord = [[round(x[0].item()),round(x[1].item())]
+                    ,[round(x[2].item()),round(x[3].item())]]
+            print(coord)
+            cv.rectangle(cleared, coord[0], coord[1], color=(0,0,0), thickness=-1)
+
+    cv.imwrite('removed.jpg', cleared)
+    cv.imwrite('gray.jpg', grayscaleImage)
+    cv.imwrite('blur.jpg', blur)
+    cv.imwrite('thresh_img.jpg', thresh)
     cv.imwrite('predicted.jpg', annotated_frame)
     print('Saved image to: predicted.jpg')
 
 
 
 def main():
-    if sys.argv[1]:
+    if len(sys.argv) > 1:
         run_model(sys.argv[1])
     else:
         userin = int(input('do you want to use the camera(1), or analyze an image in the directory(2): '))
