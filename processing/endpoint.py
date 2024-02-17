@@ -25,7 +25,7 @@ def thresholdImage(resizedImage, path):
     grayscaleImage = cv2.cvtColor(resizedImage, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(grayscaleImage, (9,9),0)
 
-    cv2.imwrite(os.path.join(path, "blur.jpg") , blur)
+    #cv2.imwrite(os.path.join(path, "blur.jpg") , blur)
 
     thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
                                     cv2.THRESH_BINARY_INV, 7, 5)
@@ -45,9 +45,9 @@ def thresholdImage(resizedImage, path):
     # Threshold the image so that white pixels get a value of 0 and
     # black pixels a value of 10:
 
-    cv2.imwrite(os.path.join(path, "skel_ZS.jpg") , skeleton)
-    cv2.imwrite(os.path.join(path, "gray3.jpg"), grayscaleImage)
-    cv2.imwrite(os.path.join(path, "close.jpg"), closing)
+    #cv2.imwrite(os.path.join(path, "skel_ZS.jpg") , skeleton)
+    #cv2.imwrite(os.path.join(path, "gray3.jpg"), grayscaleImage)
+    #cv2.imwrite(os.path.join(path, "close.jpg"), closing)
     # Set the end-points kernel:
     kernel = np.uint8([[1, 1, 1],
                 [1, 10, 1],

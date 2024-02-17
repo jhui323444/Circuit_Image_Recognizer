@@ -2,6 +2,9 @@ import numpy as np
 import cv2 as cv
 from ultralytics import YOLO
 import sys
+import os
+from processing.endpoint import resizeImage, thresholdImage, getContours
+from processing.line_detection import generateLines
 
 def igen_frames():
     cap = cv.VideoCapture(0, cv.CAP_V4L2)
@@ -54,16 +57,18 @@ def run_model(path):
     model = YOLO('./runs/detect/train8/weights/best.pt')
 
     frame = cv.imread(path)
-
-    results = model.predict(frame, conf=0.5, max_det=20, classes=[1]+list(range(3,52)))
+    curpath = os.getcwd()
+    resized, width, height = resizeImage(frame, curpath, 25)
+    results = model.predict(resized, conf=0.5, max_det=20, classes=[1]+list(range(3,52)))
 
     annotated_frame = results[0].plot()
 
-    grayscaleImage = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    blur = cv.GaussianBlur(grayscaleImage, (9,9),0)
-    thresh = cv.adaptiveThreshold(blur, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 11, 2)
-
-    cleared = thresh.copy()
+    compthresh = thresholdImage(resized, curpath)
+    #grayscaleImage = cv.cvtColor(resized, cv.COLOR_BGR2GRAY)
+    #blur = cv.GaussianBlur(grayscaleImage, (9,9),0)
+    #thresh = cv.adaptiveThreshold(blur, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 11, 2)
+    
+    cleared = compthresh.copy()
 
     for r in results:
         #print(r.boxes)
@@ -76,10 +81,12 @@ def run_model(path):
             print(coord)
             cv.rectangle(cleared, coord[0], coord[1], color=(0,0,0), thickness=-1)
 
+    out, contours = getContours(cleared, curpath)
+    generateLines(resized, cleared, contours, curpath)
     cv.imwrite('removed.jpg', cleared)
-    cv.imwrite('gray.jpg', grayscaleImage)
-    cv.imwrite('blur.jpg', blur)
-    cv.imwrite('thresh_img.jpg', thresh)
+    #cv.imwrite('gray.jpg', grayscaleImage)
+    #cv.imwrite('blur.jpg', blur)
+    #cv.imwrite('thresh_img.jpg', thresh)
     cv.imwrite('predicted.jpg', annotated_frame)
     print('Saved image to: predicted.jpg')
 

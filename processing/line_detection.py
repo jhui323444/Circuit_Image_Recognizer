@@ -2,24 +2,8 @@ import cv2 as cv
 import numpy as np
 import os
 from pylsd import lsd
-from endpoint import getContours, resizeImage, thresholdImage, get_node_Dict, \
-getCentroidsDict, getEndPoints
-image = cv.imread('test_circuit.jpg')
-os.chdir("..")
-os.chdir("output_images")
-path = os.getcwd()
 
-# Resize image to maintain consistency and reduce noise (Refer to document)
-image, width, height = resizeImage(image, path, 25)
-thresh = thresholdImage(image, path)
-mask = getEndPoints(thresh, path)
-centroidDict = getCentroidsDict(mask)
-out, contours = getContours(thresh, path)
-nodeDict, points = get_node_Dict(centroidDict, image, contours, width, height)
-print(points)
 
-allh = {}
-allv = {}
 
 def calculateLineCoords(horizontal, vertical, x1, y1, x2, y2, mode):
     if mode == 1:
@@ -76,96 +60,141 @@ def findLines(segments, allv, allh):
     allv.update(vertical)
 
 
-for cnt in contours:
-    blank = np.zeros_like(thresh)
-    cv.drawContours(blank, [cnt], 0, (255,255,255), -1)
-    segments = lsd(blank, scale =.4)
-    findLines(segments, allv, allh)
+def adjustLineCoordinates(lineDict1, lineDict2, coord1, coord2):
+    prev = -1
+    for values in lineDict1.values():
+        current = values[coord1]
+        if(current == prev): continue
+        for key, value in lineDict2.items():
+            if((abs(value[coord1] - current) > 40) and \
+               (abs(value[coord2] - current)  > 40)):
+                continue
+
+            if (abs(value[coord1] - current) <= 40):
+                lineDict2[key][coord1] = current
+
+            if(abs(value[coord2] - current) <= 40):
+                lineDict2[key][coord2] = current
+
+            prev = current
+
+def generateLines(image, thresholded, contours, path):
+    allh = {}
+    allv = {}
+    for cnt in contours:
+        blank = np.zeros_like(thresholded)
+        cv.drawContours(blank, [cnt], 0, (255,255,255), -1)
+        segments = lsd(blank, scale =.4)
+        findLines(segments, allv, allh)
     
-# Sort the x and y values 
-sortH = list(allh.keys())
-sortH.sort()
-allh = {i: allh[i] for i in sortH}
-print(allh)
+    # Sort the x and y values 
+    sortH = list(allh.keys())
+    sortH.sort()
+    allh = {i: allh[i] for i in sortH}
+    print(allh)
 
-sortV = list(allv.keys())
-sortV.sort()
-allv = {i: allv[i] for i in sortV}
-print(allv)
+    sortV = list(allv.keys())
+    sortV.sort()
+    allv = {i: allv[i] for i in sortV}
+    print(allv)
 
-adjustedH = {}
-adjustedV = {}
-prev = -1
-count = 0
+    adjustedH = {}
+    adjustedV = {}
+    prev = -1
+    count = 0
 
-# Adjust y values that are close to be same
-for key,values in allh.items():
-    current = key
-    if abs(current - prev) <= 30:
-        adjustedH[count] = [values[0], prev, values[1], prev]
-        count += 1
-        continue
-    else:
-        adjustedH[count] = [values[0], current, values[1], current]
-        count += 1
-    
-    prev = current
-
-# Adjust x values that are close to be same
-count = 0
-for key,values in allv.items():
-    current = key
-    if abs(current - prev) <= 30:
-        adjustedV[count] = [prev, values[0], prev, values[1]]
-        count += 1
-        continue
-    else:
-        adjustedV[count] = [current, values[0], current, values[1]]
-        count += 1
-    
-    prev = current
-
-# Adjust y values of vertical lines to match horizontal lines
-prev = -1 
-for keyH, values in adjustedH.items():
-    current = values[1]
-    if(current == prev): continue
-    for key, value in adjustedV.items():
-        if((abs(value[1] - current) > 30) and (abs(value[3] - current)  > 30)):
+    # Adjust y values that are close to be same
+    for key,values in allh.items():
+        current = key
+        if abs(current - prev) <= 30:
+            adjustedH[count] = [values[0], prev, values[1], prev]
+            count += 1
             continue
-
-        if (abs(value[1] - current) <= 30):
-            adjustedV[key][1] = current
-
-        if(abs(value[3] - current) <= 30):
-            adjustedV[key][3] = current
-
+        else:
+            adjustedH[count] = [values[0], current, values[1], current]
+            count += 1
+        
         prev = current
+
+    # Adjust x values that are close to be same
+    count = 0
+    for key,values in allv.items():
+        current = key
+        if abs(current - prev) <= 30:
+            adjustedV[count] = [prev, values[0], prev, values[1]]
+            count += 1
+            continue
+        else:
+            adjustedV[count] = [current, values[0], current, values[1]]
+            count += 1
+        
+        prev = current
+    
+    adjustLineCoordinates(adjustedH, adjustedV, 1, 3)
+    adjustLineCoordinates(adjustedV, adjustedH, 0, 2)
+
+    for values in adjustedH.values():
+        cv.line(image, (values[0], values[1]), \
+                (values[2], values[3]), (0, 255, 0), 6)
+
+    for values in adjustedV.values():
+        cv.line(image, (values[0], values[1]), \
+                (values[2], values[3]), (0, 0, 255), 6)
+
+    cv.imwrite(os.path.join(path, 'test.jpg'), image)
+# prev = -1 
+# for keyH, values in adjustedH.items():
+#     current = values[1]
+#     if(current == prev): continue
+#     for key, value in adjustedV.items():
+#         if((abs(value[1] - current) > 30) and \
+#            (abs(value[3] - current)  > 30)):
+#             continue
+
+#         if (abs(value[1] - current) <= 30):
+#             adjustedV[key][1] = current
+
+#         if(abs(value[3] - current) <= 30):
+#             adjustedV[key][3] = current
+
+#         prev = current
+
 
 # Adjust x values of horizontal lines to vertical lines
-prev = -1
-for values in adjustedV.values():
-    current = values[0]
-    if(current == prev): continue
-    for key, value in adjustedH.items():
-        if((abs(value[0] - current) > 30) and (abs(value[2] - current)  > 30)):
-            continue
+# prev = -1
+# for values in adjustedV.values():
+#     current = values[0]
+#     if(current == prev): continue
+#     for key, value in adjustedH.items():
+#         if((abs(value[0] - current) > 30) and \
+#           (abs(value[2] - current)  > 30)):
+#             continue
 
-        if (abs(value[0] - current) <= 30):
-            adjustedH[key][0] = current
+#         if (abs(value[0] - current) <= 30):
+#             adjustedH[key][0] = current
             
-        if (abs(value[2] - current) <= 30):
-            adjustedH[key][2] = current
+#         if (abs(value[2] - current) <= 30):
+#             adjustedH[key][2] = current
 
-        prev = current
+#         prev = current
 
+if __name__ == '__main__':
+    from endpoint import getContours, resizeImage, thresholdImage, \
+        get_node_Dict, getCentroidsDict, getEndPoints
+    image = cv.imread('empty4.jpg')
 
-for values in adjustedH.values():
-    cv.line(image, (values[0], values[1]), \
-            (values[2], values[3]), (0, 255, 0), 6)
+    os.chdir("..")
+    os.chdir("output_images")
+    path = os.getcwd()
 
-for values in adjustedV.values():
-    cv.line(image, (values[0], values[1]), \
-            (values[2], values[3]), (0, 0, 255), 6)
+    # Resize image to maintain consistency and reduce noise (Refer to document)
+    image, width, height = resizeImage(image, path, 25)
+    thresh = thresholdImage(image, path)
+    mask = getEndPoints(thresh, path)
+    centroidDict = getCentroidsDict(mask)
+    out, contours = getContours(thresh, path)
+    nodeDict, points = get_node_Dict(centroidDict, image, \
+                                     contours, width, height)
+    print(points)
 
-cv.imwrite(os.path.join(path, 'test.jpg'), image)
+    generateLines(image, thresh, contours, path)
