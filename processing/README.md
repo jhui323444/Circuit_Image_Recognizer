@@ -1,4 +1,4 @@
-_# Processing Function Documentation
+# Processing Function Documentation
 Here is documentation on the functions within this directory on their parameters and usage.
 
 ## Endpoint Detection
