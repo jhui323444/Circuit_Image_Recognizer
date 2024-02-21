@@ -1,4 +1,4 @@
-# Processing Function Documentation
+_# Processing Function Documentation
 Here is documentation on the functions within this directory on their parameters and usage.
 
 ## Endpoint Detection
@@ -8,21 +8,45 @@ the endpoints of wires.
 ```
 resize_image(image, path, scale_percent = 25, save_image = 0)
 
-threshold_image(image, path)
+threshold_image(image, path, save_image = 0)
 
-get_contours(image, path)
+get_contours(image, path, save_image = 0)
 
-get_endpoints(image, path)
+get_endpoints(image, path, save_image = 0)
 
-get_centroid_dict(endPointsMask)
+get_centroid_dict(end_points_mask)
 
 get_node_dict(centroids_dictionary, image, contours, width, height)
 ```
 
 
-#### `resizeImage`
-* **Input Args:** image, path, scale_percent, save_image 
-* **Output Args:** resized_image, width, height
-* **Description:** Resizes some input image to whatever percent and returns modified image. The default percent is 25 to reduce noise when converting image to grayscale. The modified image is saved into the provided master path name. Save_image sets whether to save a resized version of the input image.
+#### `resize_image`
+* **Input Args:**
+  * `image` - Image to be resized.
+  * `path` - Absolute path name to save image to.
+  * `scale_percent` - Integer value used to scale input image.
+  * `save_image` - Flag setting what images to save to absolute path location.
+* **Output Args:**
+  * `resized_image` - Scaled image returned.
+  * `width` - Width of resized image.
+  * `height` - Height of resized image.
+* **Description:** Resizes image. If save_image set to 1, saves resized image into absolute path directory. 
 
-#### `thresholdImage`
+#### `threshold_image`
+* **Input Args:**
+  * `image` - Image to be thresholded and filtered.
+  * `path` - Absolute path name to save image to.
+  * `save_image` - Flag setting what images to save to absolute path location.
+* **Output Args:**
+  * `img_filtered` - Thresholded and filtered image.
+* **Description:** Takes in image and converts to grayscale image. Noise in image is filtered leaving major image portions with (255, 255, 255) pixel values. If save image set to 1, thresholded image and final filtered image saved to. If save image set to 2, blurred, grayscale, skeleton, and closed image (in addition to thresholded and filtered images) saves to input path.  
+
+#### `get_contours`
+* **Inpute Args:**
+  * `image` - Image to obtain contours from.
+  * `path` - Absolute path name to save image to.
+  * `save_image` -  Flag setting what images to save to absolute path location.
+* **Output Args:**
+  * `out` - Grayscale image with contours of wires saved.
+  * `contours` - Contour areas seen within image.
+* **Description:** Takes in grayscaled image (thresholded and filtered) and identifies wires within image. Returns image with all contours found and an array of contours found.
