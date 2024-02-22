@@ -84,7 +84,7 @@ get_node_dict(centroids_dictionary, image, contours, width, height)
 You may change the testing image to whatever you want. Make sure the image is within the same directory as the `endpoint.py` file.
 
 ## Line Detection
-`line_detection.py` identifies wires within an input circuit image, makes them to be straight, and draws them within input image after adjusting them with respect to each other.
+`line_detection.py` identifies wires within an input circuit image, straightens them, and draws them within input image after adjusting them with respect to each other.
 
 #### Summary
 ```
