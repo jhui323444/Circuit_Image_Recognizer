@@ -2,9 +2,9 @@
 Below is documentation on the functions within this directory on their parameters and usage. 
 
 ## Endpoint Detection
-The purpose of 'endpoint.py' is to take in some circuit image and obtain 
-the endpoints of wires. 
+'endpoint.py' takes in some circuit image and obtains the endpoints of wires. 
 
+#### Summary
 ```
 resize_image(image, path, scale_percent = 25, save_image = 0)
 
@@ -82,3 +82,28 @@ get_node_dict(centroids_dictionary, image, contours, width, height)
 
 ### Running the File on Its Own
 You may change the testing image to whatever you want. Make sure the image is within the same directory as the `endpoint.py` file.
+
+## Line Detection
+`line_detection.py` identifies wires within an input circuit image, makes them to be straight, and draws them within input image after adjusting them with respect to each other.
+
+#### Summary
+```
+calculate_line_coords(horizontal, vertical, x1, y1, x2, y2, mode)
+
+find_lines(segments, allv, allh)
+
+adjust_line_coordinates(line_dict_1, line_dict_2, coord1, coord2)
+
+generate_lines(image, thresholded, contours, path)
+```
+
+#### `calculate_line_coords`
+* **Input Args:**
+  * `direction` - Dictionary for horizontal or vertical lines.
+  * `x1` - First x coordinate of line segment.
+  * `y1` - First y coordinate of line segment.
+  * `x2` - Second x coordinate of line segment.
+  * `y2` - Second y coordinate of line segment.
+  * `mode` - Sets mode for line maximum line coordinate calculation. If mode set to 1, calculate for vertical lines. If mode set to 2, calculate for horizontal lines. Ensure input direction dictionary is correct.
+* **Output Args:** None
+* **Description:** Adds (horizontal or vertical) line into input dictionary. If dictionary has line with (x/y) coordinate of same range as line segment provided in coordinates, expand the line if coordinates exist past current line size. If not, skip coordinate adjustment.
