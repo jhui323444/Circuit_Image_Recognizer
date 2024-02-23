@@ -134,3 +134,6 @@ generate_lines(image, thresholded, contours, path)
   * `mode` - Flag to set debug and saving of image. Set to 0 by default. If `mode` set to 1, function prints found horizontal and vertical line, and all adjusted lines coordinates, .
 * **Output Args:** None
 * **Description** Generates and draws all lines onto input image and saves into `path` directory.
+
+### Running the File on Its Own
+Provide an image within the python file. This image should be in the same directory as the file. Endpoints of nodes in image shown and final versions of lines generated. Image outputs to `output_images` directory.
