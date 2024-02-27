@@ -3,9 +3,9 @@ import cv2 as cv
 from ultralytics import YOLO
 import sys
 import os
-from processing.endpoint import resizeImage, thresholdImage, getContours
-from processing.line_detection import generateLines
-
+from processing.endpoint import resize_image, threshold_image, get_contours
+from processing.line_detection import generate_lines
+from processing.schematic import identifyComponent
 def igen_frames():
     cap = cv.VideoCapture(0, cv.CAP_V4L2)
     cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc('M', 'J', 'P', 'G'))
@@ -31,7 +31,8 @@ def igen_frames():
             #do operations here
             #detections = coco_model(frame)[0]
 
-            results = model.predict(frame, conf=0.5, max_det=20, classes=[1]+list(range(3,52)))
+            results = model.predict(frame, conf=0.5, \
+                                    max_det=20, classes=[1]+list(range(3,52)))
 
             #annotated_frame_arr = frame 
 
@@ -57,36 +58,35 @@ def run_model(path):
     model = YOLO('./runs/detect/train8/weights/best.pt')
 
     frame = cv.imread(path)
-    curpath = os.getcwd()
-    resized, width, height = resizeImage(frame, curpath, 25)
-    results = model.predict(resized, conf=0.5, max_det=20, classes=[1]+list(range(3,52)))
+    cur_path = os.getcwd()
+    resized, width, height = resize_image(frame, cur_path)
+    results = model.predict(resized, conf=0.5, \
+                            max_det=20, classes=[1]+list(range(3,52)))
 
     annotated_frame = results[0].plot()
 
-    compthresh = thresholdImage(resized, curpath)
-    #grayscaleImage = cv.cvtColor(resized, cv.COLOR_BGR2GRAY)
-    #blur = cv.GaussianBlur(grayscaleImage, (9,9),0)
-    #thresh = cv.adaptiveThreshold(blur, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 11, 2)
-    
-    cleared = compthresh.copy()
+    thresh = threshold_image(resized, cur_path)
+    cleared = thresh.copy()
 
     for r in results:
         #print(r.boxes)
         #print(r.boxes.xyxy)
+
+        
         for x in r.boxes.xyxy:
-            print(round(x[0].item()))
-            print(x[1])
             coord = [[round(x[0].item()),round(x[1].item())]
                     ,[round(x[2].item()),round(x[3].item())]]
             print(coord)
-            cv.rectangle(cleared, coord[0], coord[1], color=(0,0,0), thickness=-1)
+            cv.rectangle(cleared, coord[0], coord[1], \
+                         color=(0,0,0), thickness=-1)
 
-    out, contours = getContours(cleared, curpath)
-    generateLines(resized, cleared, contours, curpath)
+    
+    out, contours = get_contours(cleared, cur_path)
+    horizontal, vertical = generate_lines(resized, cleared, contours, cur_path)
+    h, v = identifyComponent(results, horizontal, vertical)
+    print(h)
+    print(v)
     cv.imwrite('removed.jpg', cleared)
-    #cv.imwrite('gray.jpg', grayscaleImage)
-    #cv.imwrite('blur.jpg', blur)
-    #cv.imwrite('thresh_img.jpg', thresh)
     cv.imwrite('predicted.jpg', annotated_frame)
     print('Saved image to: predicted.jpg')
 

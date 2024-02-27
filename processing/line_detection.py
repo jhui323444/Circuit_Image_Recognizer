@@ -5,45 +5,43 @@ from pylsd import lsd
 
 
 
-def calculateLineCoords(horizontal, vertical, x1, y1, x2, y2, mode):
+def calculate_line_coords(direction, x1, y1, x2, y2, mode):
     if mode == 1:
         x = (x1 + x2)/2
-        if int(x) not in vertical.keys():
+        if int(x) not in direction.keys():
             exists = False
-            for xval in vertical.keys():
+            for xval in direction.keys():
                 if abs(int(x)-xval) <= 15:
-                    # Take minimum/,maximum y coords from current line
-                    # (either side) and compare to current min/max saved for
-                    # x coordinate 
-                    vertical[xval][0] = min(vertical[xval][0], \
+                    
+                    direction[xval][0] = min(direction[xval][0], \
                                             min(int(y1),int(y2)))
-                    vertical[xval][1] = max(vertical[xval][1], \
+                    direction[xval][1] = max(direction[xval][1], \
                                             max(int(y1),int(y2)))
                     exists = True
                     break
             if exists == False:
-                vertical[int(x)] = [min(int(y1),int(y2)), \
+                direction[int(x)] = [min(int(y1),int(y2)), \
                                     max(int(y1),int(y2))]
     elif mode == 2:
         y = (y1 + y2)/2
-        if int(y) not in horizontal.keys():
+        if int(y) not in direction.keys():
             exists = False
-            for yval in horizontal.keys():
+            for yval in direction.keys():
                 if abs(int(y)-yval) <= 15:
                     # Take minimum/,maximum x coords from current line
                     # (either side) and compare to current min/max saved for
                     # y coordinate 
-                    horizontal[yval][0] = min(horizontal[yval][0], \
+                    direction[yval][0] = min(direction[yval][0], \
                                                 min(int(x1),int(x2)))
-                    horizontal[yval][1] = max(horizontal[yval][1], \
+                    direction[yval][1] = max(direction[yval][1], \
                                                 max(int(x1),int(x2)))
                     exists = True
                     break
             if exists == False:
-                horizontal[int(y)] = [min(int(x1),int(x2)), \
+                direction[int(y)] = [min(int(x1),int(x2)), \
                                         max(int(x1),int(x2))]   
     
-def findLines(segments, allv, allh):
+def find_lines(segments, allv, allh):
     horizontal = {}
     vertical = {}
 
@@ -52,135 +50,111 @@ def findLines(segments, allv, allh):
         angle = np.abs(np.rad2deg(np.arctan2(y1 - y2, x1 - x2)))
 
         if(angle < 105 and angle > 75):
-            calculateLineCoords(horizontal, vertical, x1, y1, x2, y2, 1)
+            calculate_line_coords(vertical, x1, y1, x2, y2, 1)
         else: 
-            calculateLineCoords(horizontal, vertical, x1, y1, x2, y2, 2)
-        
+            calculate_line_coords(horizontal, x1, y1, x2, y2, 2)
+            
     allh.update(horizontal)
     allv.update(vertical)
 
 
-def adjustLineCoordinates(lineDict1, lineDict2, coord1, coord2):
+def adjust_line_coordinates(line_dict_1, line_dict_2, coord1, coord2):
     prev = -1
-    for values in lineDict1.values():
+    for values in line_dict_1.values():
         current = values[coord1]
+
         if(current == prev): continue
-        for key, value in lineDict2.items():
-            if((abs(value[coord1] - current) > 40) and \
-               (abs(value[coord2] - current)  > 40)):
+
+        for key, value in line_dict_2.items():
+            if((abs(value[coord1] - current) > 25) and \
+               (abs(value[coord2] - current)  > 25)):
                 continue
 
-            if (abs(value[coord1] - current) <= 40):
-                lineDict2[key][coord1] = current
+            if (abs(value[coord1] - current) <= 25):
+                line_dict_2[key][coord1] = current
 
-            if(abs(value[coord2] - current) <= 40):
-                lineDict2[key][coord2] = current
+            if(abs(value[coord2] - current) <= 25):
+                line_dict_2[key][coord2] = current
 
             prev = current
 
-def generateLines(image, thresholded, contours, path):
+def generate_lines(image, thresholded, contours, path, mode = 0):
     allh = {}
     allv = {}
     for cnt in contours:
         blank = np.zeros_like(thresholded)
         cv.drawContours(blank, [cnt], 0, (255,255,255), -1)
         segments = lsd(blank, scale =.4)
-        findLines(segments, allv, allh)
+        find_lines(segments, allv, allh)
     
     # Sort the x and y values 
-    sortH = list(allh.keys())
-    sortH.sort()
-    allh = {i: allh[i] for i in sortH}
-    print(allh)
+    sort_h = list(allh.keys())
+    sort_h.sort()
+    allh = {i: allh[i] for i in sort_h}
+    
+    
 
-    sortV = list(allv.keys())
-    sortV.sort()
-    allv = {i: allv[i] for i in sortV}
-    print(allv)
+    sort_v = list(allv.keys())
+    sort_v.sort()
+    allv = {i: allv[i] for i in sort_v}
+        
 
-    adjustedH = {}
-    adjustedV = {}
+    adjusted_h = {}
+    adjusted_v = {}
     prev = -1
     count = 0
-
     # Adjust y values that are close to be same
     for key,values in allh.items():
         current = key
-        if abs(current - prev) <= 30:
-            adjustedH[count] = [values[0], prev, values[1], prev]
+        if abs(current - prev) <= 50:
+            adjusted_h[count] = [values[0], prev, values[1], prev]
             count += 1
             continue
         else:
-            adjustedH[count] = [values[0], current, values[1], current]
+            adjusted_h[count] = [values[0], current, values[1], current]
             count += 1
         
         prev = current
-
     # Adjust x values that are close to be same
     count = 0
     for key,values in allv.items():
         current = key
-        if abs(current - prev) <= 30:
-            adjustedV[count] = [prev, values[0], prev, values[1]]
+        if abs(current - prev) <= 50:
+            adjusted_v[count] = [prev, values[0], prev, values[1]]
             count += 1
             continue
         else:
-            adjustedV[count] = [current, values[0], current, values[1]]
+            adjusted_v[count] = [current, values[0], current, values[1]]
             count += 1
         
         prev = current
     
-    adjustLineCoordinates(adjustedH, adjustedV, 1, 3)
-    adjustLineCoordinates(adjustedV, adjustedH, 0, 2)
+    adjust_line_coordinates(adjusted_h, adjusted_v, 1, 3)
+    adjust_line_coordinates(adjusted_v, adjusted_h, 0, 2)
 
-    for values in adjustedH.values():
+
+    for values in adjusted_h.values():
         cv.line(image, (values[0], values[1]), \
                 (values[2], values[3]), (0, 255, 0), 6)
 
-    for values in adjustedV.values():
+    for values in adjusted_v.values():
         cv.line(image, (values[0], values[1]), \
                 (values[2], values[3]), (0, 0, 255), 6)
+    if mode == 1:
+        print(f'Found horizontal lines: {allh}')
+        print(f'Found vertical lines: {allv}')
 
+        print(f'Adjusted horizontal lines: {adjusted_h}')
+        print(f'Adjusted vertical lines: {adjusted_v}')
     cv.imwrite(os.path.join(path, 'test.jpg'), image)
-# prev = -1 
-# for keyH, values in adjustedH.items():
-#     current = values[1]
-#     if(current == prev): continue
-#     for key, value in adjustedV.items():
-#         if((abs(value[1] - current) > 30) and \
-#            (abs(value[3] - current)  > 30)):
-#             continue
 
-#         if (abs(value[1] - current) <= 30):
-#             adjustedV[key][1] = current
-
-#         if(abs(value[3] - current) <= 30):
-#             adjustedV[key][3] = current
-
-#         prev = current
+    return adjusted_h, adjusted_v
 
 
-# Adjust x values of horizontal lines to vertical lines
-# prev = -1
-# for values in adjustedV.values():
-#     current = values[0]
-#     if(current == prev): continue
-#     for key, value in adjustedH.items():
-#         if((abs(value[0] - current) > 30) and \
-#           (abs(value[2] - current)  > 30)):
-#             continue
-
-#         if (abs(value[0] - current) <= 30):
-#             adjustedH[key][0] = current
-            
-#         if (abs(value[2] - current) <= 30):
-#             adjustedH[key][2] = current
-
-#         prev = current
 
 if __name__ == '__main__':
-    from endpoint import getContours, resizeImage, thresholdImage, \
-        get_node_Dict, getCentroidsDict, getEndPoints
+    from endpoint import get_contours, resize_image, threshold_image, \
+        get_node_dict, get_centroids_dict, get_end_points
     image = cv.imread('empty4.jpg')
 
     os.chdir("..")
@@ -188,13 +162,15 @@ if __name__ == '__main__':
     path = os.getcwd()
 
     # Resize image to maintain consistency and reduce noise (Refer to document)
-    image, width, height = resizeImage(image, path, 25)
-    thresh = thresholdImage(image, path)
-    mask = getEndPoints(thresh, path)
-    centroidDict = getCentroidsDict(mask)
-    out, contours = getContours(thresh, path)
-    nodeDict, points = get_node_Dict(centroidDict, image, \
+    image, width, height = resize_image(image, path)
+    thresh = threshold_image(image, path)
+    mask = get_end_points(thresh, path)
+    centroid_dict = get_centroids_dict(mask)
+    out, contours = get_contours(thresh, path)
+    nodeDict, points = get_node_dict(centroid_dict, image, \
                                      contours, width, height)
     print(points)
 
-    generateLines(image, thresh, contours, path)
+    horizontal, vertical = generate_lines(image, thresh, contours, path)
+    print(horizontal) 
+    print(vertical)

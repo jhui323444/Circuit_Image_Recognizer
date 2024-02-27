@@ -2,9 +2,71 @@
 # to run in ltspice
 #
 
-def generate_schematic():
+# TO Do
+# Check component box
+#   - Identify component
+#       - Need to have some sort of list with correct string
+#         name for components in LTSpice
+#   - Check closest line endpoints
+#   - Take one line endpoint, adjust to correct ltspice size
+#   - Write component coords into new dictionary/array?
+#      - Some sort of storage
+#
+# Generate schematic
+#   - Write header into schematic file, add dimensions of circuit
+#   - Write wires into ASCII file
+#   - Write components into file
+
+from ultralytics import YOLO
+
+# Input is dictionary of horizontal or vertical lines
+
+# matched_lines needs: x1,y1,x2,y2 of found line(s) and what component
+# closest to bounding box
+def match_line_to_component(coords, lines, matched_lines, count, mode):
+    x1, y1, x2, y2 = round(coords[0].item()), round(coords[1].item()), \
+                     round(coords[2].item()), round(coords[3].item())
+    
+    for key, line in lines.items():
+        # horizontal lines (same y, different x)
+        if mode == 0:
+            # if y coord within range of bounding box and
+            # if either x coordinate close enough to bounding box
+            if line[1] <= y2 and line[1] >= y1:
+                match_points(line, matched_lines, x1, \
+                             x2, count, 0)
+        if mode == 1:
+            if line[0] <= x2 and line[0] >= x1:
+                match_points(line, matched_lines, y1, \
+                             y2, count, 1)
+
+## mode = 0, 
+def match_points(line, matched_lines,coord1, coord2, count, mode):
+    if abs(line[mode] - coord1) <= 10 or abs(line[mode] - coord2) <= 10:
+        matched_lines.setdefault(count, []).extend([line])
+    if abs(line[mode + 2] - coord1) <= 10 or abs(line[mode + 2] - coord2) <= 10:
+        matched_lines.setdefault(count, []).extend([line])
+
+
+def identifyComponent(results, horizontal, vertical):
+    components_h = {}
+    components_v = {}
+    for r in results:
+        for count, x in enumerate(r.boxes.xyxy):
+            match_line_to_component(x, horizontal, components_h, count, 0)
+            match_line_to_component(x, vertical, components_v, count, 1)
+        for count, x in enumerate(r.boxes.cls):
+
+            if count in components_h:
+                components_h.setdefault(count, []).extend([x.item()])
+            elif count in components_v:
+                components_v.setdefault(count, []).extend([x.item()])
+    return components_h, components_v
+
+def generate_schematic(height, width):
     f = open("schematic_test.asc", "w")
     f.write("Version 4")
+    f.write(f'SHEET 1 {height} {width}')
     f.close()
 
 
