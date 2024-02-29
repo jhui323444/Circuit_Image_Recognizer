@@ -5,7 +5,7 @@ import sys
 import os
 from processing.endpoint import resize_image, threshold_image, get_contours
 from processing.line_detection import generate_lines
-from processing.schematic import identifyComponent
+from processing.schematic import identify_component, adjust_line_length
 def igen_frames():
     cap = cv.VideoCapture(0, cv.CAP_V4L2)
     cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc('M', 'J', 'P', 'G'))
@@ -69,24 +69,22 @@ def run_model(path):
     cleared = thresh.copy()
 
     for r in results:
-        #print(r.boxes)
-        #print(r.boxes.xyxy)
-
-        
         for x in r.boxes.xyxy:
             coord = [[round(x[0].item()),round(x[1].item())]
                     ,[round(x[2].item()),round(x[3].item())]]
-            print(coord)
+            #print(coord)
             cv.rectangle(cleared, coord[0], coord[1], \
                          color=(0,0,0), thickness=-1)
 
     
     out, contours = get_contours(cleared, cur_path)
     horizontal, vertical = generate_lines(resized, cleared, contours, cur_path)
-    h, v = identifyComponent(results, horizontal, vertical)
+    h, v = identify_component(results, horizontal, vertical)
+    
     print(h)
     print(v)
     cv.imwrite('removed.jpg', cleared)
+    print('Saved image to: removed.jpg')
     cv.imwrite('predicted.jpg', annotated_frame)
     print('Saved image to: predicted.jpg')
 

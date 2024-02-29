@@ -106,7 +106,7 @@ def generate_lines(image, thresholded, contours, path, mode = 0):
     # Adjust y values that are close to be same
     for key,values in allh.items():
         current = key
-        if abs(current - prev) <= 50:
+        if abs(current - prev) <= 25:
             adjusted_h[count] = [values[0], prev, values[1], prev]
             count += 1
             continue
@@ -119,7 +119,7 @@ def generate_lines(image, thresholded, contours, path, mode = 0):
     count = 0
     for key,values in allv.items():
         current = key
-        if abs(current - prev) <= 50:
+        if abs(current - prev) <= 25:
             adjusted_v[count] = [prev, values[0], prev, values[1]]
             count += 1
             continue
