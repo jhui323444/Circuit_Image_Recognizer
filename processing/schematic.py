@@ -43,15 +43,15 @@ def match_line_to_component(coords, lines, matched_lines, count, mode):
 ## mode = 0, 
 
 def match_points(line, matched_lines,coord1, coord2, count, mode):
-    if abs(line[mode] - coord1) <= 10:
+    if abs(line[mode] - coord1) <= 30:
         matched_lines.setdefault(count, []).extend([line, line[mode], mode])
-    elif abs(line[mode] - coord2) <= 10:
+    elif abs(line[mode] - coord2) <= 30:
         matched_lines.setdefault(count, []).extend([line, line[mode], mode])
 
-    elif abs(line[mode + 2] - coord1) <= 10:
+    elif abs(line[mode + 2] - coord1) <= 30:
         matched_lines.setdefault(count, []).extend([line, \
                                                     line[mode + 2], mode + 2])
-    elif abs(line[mode + 2] - coord2) <= 10:
+    elif abs(line[mode + 2] - coord2) <= 30:
         matched_lines.setdefault(count, []).extend([line, \
                                                     line[mode + 2], mode + 2])
 
@@ -59,6 +59,7 @@ def match_points(line, matched_lines,coord1, coord2, count, mode):
 def identify_component(results, horizontal, vertical):
     components_h = {}
     components_v = {}
+    line_fixes = {}
     for r in results:
         for count, x in enumerate(r.boxes.xyxy):
             match_line_to_component(x, horizontal, components_h, count, 0)
@@ -71,31 +72,32 @@ def identify_component(results, horizontal, vertical):
                 components_v.setdefault(count, []).extend([x.item()])
 
         for count, x in enumerate(r.boxes.xyxy):
-            adjust_line_length(components_h, count, 0)
-            adjust_line_length(components_v, count, 1)
-    return components_h, components_v
+            adjust_line_length(components_h, line_fixes, count, 0)
+            adjust_line_length(components_v, line_fixes, count, 1)
+    return components_h, components_v, horizontal, vertical, line_fixes
 
-def adjust_line_length(components, count, mode):
+def adjust_line_length(components, line_fixes, count, mode):
 
-    print(count)
-    if count in components and mode == 0:
+    if count in components:
         if int(components[count][-1]) !=  5:
             dif = components[count][1] - components[count][4]
             first = components[count][2]
-            components[count][0][first] = components[count][4] + 80 \
-                            if dif > 0 else components[count][4] - 80
-            components[count][1] = components[count][0][first]
-    
-    elif count in components and mode == 1:
-        if int(components[count][-1]) !=  5:
-            dif = components[count][1] - components[count][4]
-            first = components[count][2]
-            components[count][0][first] = components[count][4] + 80 \
-                            if dif > 0 else components[count][4] - 80
-            components[count][1] = components[count][0][first]
-        
-        
 
+            components[count][0][first] = components[count][4] + 80 \
+                            if dif > 0 else components[count][4] - 80
+            components[count][1] = components[count][0][first]
+
+            
+            # add to new dict with fixing lines        
+            if mode == 0 and components[count][0][1] != components[count][3][1]:
+                y1, y2 = components[count][0][1], components[count][3][1]
+                x = components[count][1]
+                line_fixes[count] = [x, y1, x, y2]
+                 
+            if mode == 1 and components[count][0][0] != components[count][3][0]:
+                x1, x2 = components[count][0][0], components[count][3][0]
+                y = components[count][1]
+                line_fixes[count] = [x1, y, x2, y]
 def generate_schematic(height, width):
     f = open("schematic_test.asc", "w")
     f.write("Version 4")

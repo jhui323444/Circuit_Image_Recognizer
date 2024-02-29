@@ -11,7 +11,7 @@ def calculate_line_coords(direction, x1, y1, x2, y2, mode):
         if int(x) not in direction.keys():
             exists = False
             for xval in direction.keys():
-                if abs(int(x)-xval) <= 15:
+                if abs(int(x)-xval) <= 25:
                     
                     direction[xval][0] = min(direction[xval][0], \
                                             min(int(y1),int(y2)))
@@ -27,7 +27,7 @@ def calculate_line_coords(direction, x1, y1, x2, y2, mode):
         if int(y) not in direction.keys():
             exists = False
             for yval in direction.keys():
-                if abs(int(y)-yval) <= 15:
+                if abs(int(y)-yval) <= 25:
                     # Take minimum/,maximum x coords from current line
                     # (either side) and compare to current min/max saved for
                     # y coordinate 
@@ -78,13 +78,13 @@ def adjust_line_coordinates(line_dict_1, line_dict_2, coord1, coord2):
 
             prev = current
 
-def generate_lines(image, thresholded, contours, path, mode = 0):
+def generate_lines(thresholded, contours, mode = 0):
     allh = {}
     allv = {}
     for cnt in contours:
         blank = np.zeros_like(thresholded)
         cv.drawContours(blank, [cnt], 0, (255,255,255), -1)
-        segments = lsd(blank, scale =.4)
+        segments = lsd(blank, scale =.7)
         find_lines(segments, allv, allh)
     
     # Sort the x and y values 
@@ -133,23 +133,26 @@ def generate_lines(image, thresholded, contours, path, mode = 0):
     adjust_line_coordinates(adjusted_v, adjusted_h, 0, 2)
 
 
-    for values in adjusted_h.values():
-        cv.line(image, (values[0], values[1]), \
-                (values[2], values[3]), (0, 255, 0), 6)
-
-    for values in adjusted_v.values():
-        cv.line(image, (values[0], values[1]), \
-                (values[2], values[3]), (0, 0, 255), 6)
     if mode == 1:
         print(f'Found horizontal lines: {allh}')
         print(f'Found vertical lines: {allv}')
 
         print(f'Adjusted horizontal lines: {adjusted_h}')
         print(f'Adjusted vertical lines: {adjusted_v}')
-    cv.imwrite(os.path.join(path, 'test.jpg'), image)
+    
 
     return adjusted_h, adjusted_v
 
+def draw_lines(image, horizontal, vertical, path):
+    for values in horizontal.values():
+        cv.line(image, (values[0], values[1]), \
+                (values[2], values[3]), (0, 255, 0), 6)
+
+    for values in vertical.values():
+        cv.line(image, (values[0], values[1]), \
+                (values[2], values[3]), (0, 0, 255), 6)
+    cv.imwrite(os.path.join(path, 'test.jpg'), image)
+    return image
 
 
 if __name__ == '__main__':

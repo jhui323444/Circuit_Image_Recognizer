@@ -4,8 +4,8 @@ from ultralytics import YOLO
 import sys
 import os
 from processing.endpoint import resize_image, threshold_image, get_contours
-from processing.line_detection import generate_lines
-from processing.schematic import identify_component, adjust_line_length
+from processing.line_detection import generate_lines, draw_lines
+from processing.schematic import identify_component
 def igen_frames():
     cap = cv.VideoCapture(0, cv.CAP_V4L2)
     cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc('M', 'J', 'P', 'G'))
@@ -72,17 +72,23 @@ def run_model(path):
         for x in r.boxes.xyxy:
             coord = [[round(x[0].item()),round(x[1].item())]
                     ,[round(x[2].item()),round(x[3].item())]]
-            #print(coord)
+            print(coord)
             cv.rectangle(cleared, coord[0], coord[1], \
                          color=(0,0,0), thickness=-1)
 
     
     out, contours = get_contours(cleared, cur_path)
-    horizontal, vertical = generate_lines(resized, cleared, contours, cur_path)
-    h, v = identify_component(results, horizontal, vertical)
-    
-    print(h)
-    print(v)
+    horizontal, vertical = generate_lines(cleared, contours)
+    c_h, c_v, h, v, fixes = identify_component(results, horizontal, vertical)
+    image = draw_lines(resized, h, v, cur_path)
+
+    for line in fixes.values():
+        cv.line(image, (line[0], line[1]), \
+                (line[2], line[3]), (255, 0, 0), 6)
+    print(c_h)
+    print(c_v)
+    print(fixes)
+    cv.imwrite('fixed.jpg', image)
     cv.imwrite('removed.jpg', cleared)
     print('Saved image to: removed.jpg')
     cv.imwrite('predicted.jpg', annotated_frame)
