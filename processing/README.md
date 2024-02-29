@@ -94,7 +94,9 @@ find_lines(segments, allv, allh)
 
 adjust_line_coordinates(line_dict_1, line_dict_2, coord1, coord2)
 
-generate_lines(image, thresholded, contours, path)
+generate_lines(image, thresholded, contours)
+
+draw_lines(image, horizontal, vertical, path)
 ```
 
 #### `calculate_line_coords`
@@ -127,13 +129,70 @@ generate_lines(image, thresholded, contours, path)
 
 #### `generate_lines`
 * **Input Args:**
-  * `image` - Adjusted input image.
   * `thresholded` - Thresholded and filtered version of image with components removed.
   * `contours` - Contour found in image.
-  * `path` - Absolute path name for image save location.
-  * `mode` - Flag to set debug and saving of image. Set to 0 by default. If `mode` set to 1, function prints found horizontal and vertical line, and all adjusted lines coordinates, .
-* **Output Args:** None
-* **Description** Generates and draws all lines onto input image and saves into `path` directory.
+  * `mode` - Flag to set debug and saving of image. Set to 0 by default. If `mode` set to 1, function prints found horizontal and vertical line, and all adjusted lines coordinates.
+* **Output Args:** 
+  * `horizontal` - Dictionary of all horizontal lines
+  * `vertical` - Dictionary of all vertical lines
+* **Description** Generates lines found and draws on input image.
+
+#### `draw_lines`
+* **Input Args:**
+  * `image` - Input image to draw lines on
+  * `horizontal` - Dictionary of all horizontal lines
+  * `vertical` - Dictionary of vertical lines
+  * `path` - Absolute path to save image to
+* **Output Args:**
+  * `image` - Image with lines drawn on circuit wires.
+* **Description:** Draws all found vertical and horizontal lines onto image, saves to `path` directory, and returns image.
 
 ### Running the File on Its Own
 Provide an image within the python file. This image should be in the same directory as the file. Endpoints of nodes in image shown and final versions of lines generated. Image outputs to `output_images` directory.
+
+
+## Schematic Preparation
+`schematic.py` takes in found lines and components, performs adjustments to match LTSpice specifications, and writes an ASCII file that you can run in LTSpice.
+
+#### Summary
+
+```
+match_line_to_component(coords, lines, matched_lines, count, mode)
+
+match_points(line, matched_lines, coord1, coord2, count, mode)
+
+adjust_line_length(components, line_fixes, count, mode)
+
+identify_component(results, horizontal, vertical)
+```
+
+#### `match_line_to_component`
+* **Input Args:**
+  * `coords` - Tensor with coordinates of component bounding box. In xyxy format (Top left, bottom right corners of box).
+  * `lines` - Dictionary with lines to match to component
+  * `matched_lines` - Dictionary to hold matched lines and components
+  * `count` - Integer specifying which component will be compared. Used as an ID.
+  * `mode` - Flag to specify comparisons. If `mode` set to 0, comparisons done for horizontal lines. If `mode` set to 1, comparisons done for vertical lines.
+* **Ouput Args:** None
+* **Description:** Iterates through `lines` and matches endpoints of each line to the bounding box of the found component.
+
+#### `match_points`
+* **Input Args:**
+  * `line` - Line to compare to component bounding box coordiantes
+  * `matched_lines` - Dictionary to hold matched lines and components
+  * `coord1` - First coordinate of bounding box. Set to either x1, or y1 of bounding box based on mode.
+  * `coord2` - First coordinate of bounding box. Set to either x2, or y2 of bounding box based on mode.
+  * `count` - Integer specifying which component will be compared. Used as an ID.
+  * `mode` - Flag to specify coordinate checks within line coordinates. If `mode` set to 0, performs checks on horizontal lines. If `mode` set to 1, performs checks on vertical lines.'
+* **Output Args:** None
+* **Description:** Checks whether either side of an input line is within range of bounding box coordinates.
+
+#### `adjust_line_length`
+* **Input Args:**
+  * `components` - Dictionary with line/component information. Values contain lines connected to component, value (x or y) of line connected to component, index of value in line, and type of component connected. Key is count when iterating through YoloV8 prediction results.
+  * `line_fixes` - Dictionary with line fixes for not properly adjusted lines. Keys are count ids for which components need adjustments. Value contains list with [x1, y1, x2, y2] coordinates for a new line fix.
+  * `count` - Id of component being adjusted.
+  * `mode` - Flag for line fixing. If `mode` set to 0, perform checks for horiztonal lines. If `mode` set to 1, perform checks for vertical lines.
+  * **Output Args:** None
+  * **Description:** Takes in component-line dictionary information and adjust coordinates of lines to fit LTSpice specifications for components. Checks if `count` id is in component dictionary and performs checks. If the connected lines are uneven, calculate and create new line and save to line_fixes dictionary.
+
