@@ -42,7 +42,7 @@ def match_line_to_component(coords, lines, matched_lines, count, mode):
 
 ## mode = 0, 
 
-def match_points(line, matched_lines,coord1, coord2, count, mode):
+def match_points(line, matched_lines, coord1, coord2, count, mode):
     if abs(line[mode] - coord1) <= 30:
         matched_lines.setdefault(count, []).extend([line, line[mode], mode])
     elif abs(line[mode] - coord2) <= 30:
@@ -55,26 +55,6 @@ def match_points(line, matched_lines,coord1, coord2, count, mode):
         matched_lines.setdefault(count, []).extend([line, \
                                                     line[mode + 2], mode + 2])
 
-
-def identify_component(results, horizontal, vertical):
-    components_h = {}
-    components_v = {}
-    line_fixes = {}
-    for r in results:
-        for count, x in enumerate(r.boxes.xyxy):
-            match_line_to_component(x, horizontal, components_h, count, 0)
-            match_line_to_component(x, vertical, components_v, count, 1)
-
-        for count, x in enumerate(r.boxes.cls):
-            if count in components_h:
-                components_h.setdefault(count, []).extend([x.item()])
-            elif count in components_v:
-                components_v.setdefault(count, []).extend([x.item()])
-
-        for count, x in enumerate(r.boxes.xyxy):
-            adjust_line_length(components_h, line_fixes, count, 0)
-            adjust_line_length(components_v, line_fixes, count, 1)
-    return components_h, components_v, horizontal, vertical, line_fixes
 
 def adjust_line_length(components, line_fixes, count, mode):
 
@@ -98,7 +78,67 @@ def adjust_line_length(components, line_fixes, count, mode):
                 x1, x2 = components[count][0][0], components[count][3][0]
                 y = components[count][1]
                 line_fixes[count] = [x1, y, x2, y]
-def generate_schematic(height, width):
+
+def identify_component(results, horizontal, vertical):
+    components_h = {}
+    components_v = {}
+    line_fixes = {}
+    for r in results:
+        for count, x in enumerate(r.boxes.xyxy):
+            match_line_to_component(x, horizontal, components_h, count, 0)
+            match_line_to_component(x, vertical, components_v, count, 1)
+
+        for count, x in enumerate(r.boxes.cls):
+            if count in components_h:
+                components_h.setdefault(count, []).extend([int(x.item())])
+            elif count in components_v:
+                components_v.setdefault(count, []).extend([int(x.item())])
+
+        for count, x in enumerate(r.boxes.xyxy):
+            adjust_line_length(components_h, line_fixes, count, 0)
+            adjust_line_length(components_v, line_fixes, count, 1)
+    return components_h, components_v, horizontal, vertical, line_fixes
+
+def get_comp_name(id):
+    if id == 5:
+        return "FLAG"
+    elif id == 7:
+        return "voltage"
+    elif id == 8:
+        return "Misc\\signal"
+    elif id == 9:
+        return "Misc\\battery"
+    elif id == 10:
+        return "res"
+    elif id == 11:
+        return "SpecialFunctions\\varistor"
+    elif id == 13:
+        return "cap"
+    elif id == 14:
+        return "polcap"
+    elif id == 15:
+        return "ind"
+    elif id == 17:
+        return "diode"
+    elif id == 18:
+        return "LED"
+    elif id == 19:
+        return "TVSdiode"
+    elif id == 20:
+        return "zener"
+    elif id == 21:
+        return "Misc\\DIAC"
+    elif id == 22:
+        return "Misc\\TRIAC"
+    elif id == 23:
+        return "Misc\\SCR"
+    # Add something to determine NMOS PMOS?
+    elif id == 25:
+        return "nmos4"
+    elif id == 32:
+        return "Misc\\NE555"
+    
+def generate_schematic(height, width, c_h, c_v, fixes):
     f = open("schematic_test.asc", "w")
     f.write("Version 4")
     f.write(f'SHEET 1 {height} {width}')
