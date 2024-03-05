@@ -174,6 +174,6 @@ if __name__ == '__main__':
                                      contours, width, height)
     print(points)
 
-    horizontal, vertical = generate_lines(image, thresh, contours, path)
+    horizontal, vertical = generate_lines(thresh, contours, path)
     print(horizontal) 
     print(vertical)

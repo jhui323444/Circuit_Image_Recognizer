@@ -9,6 +9,9 @@ from collections import defaultdict
 
 def resize_image(image, path, scale_percent = 25, save_image = 0):
     # Resize image:
+    if image is None:
+        raise Exception("Valid image not found.")
+    
     width = int(image.shape[1] * scale_percent / 100)
     height = int(image.shape[0] * scale_percent / 100)
 
@@ -210,7 +213,7 @@ def get_node_dict(centroids_dict, image, contours, \
 
 if __name__ == '__main__':
     # Reading an image in default mode:
-    image = cv2.imread("empty4.jpg")
+    image = cv2.imread("empty6.jpg")
     os.chdir("..")
     os.chdir("output_images")
     path = os.getcwd()
