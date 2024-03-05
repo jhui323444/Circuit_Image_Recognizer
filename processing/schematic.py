@@ -2,21 +2,6 @@
 # to run in ltspice
 #
 
-# TO Do
-# Check component box
-#   - Identify component
-#       - Need to have some sort of list with correct string
-#         name for components in LTSpice
-#   - Check closest line endpoints
-#   - Take one line endpoint, adjust to correct ltspice size
-#   - Write component coords into new dictionary/array?
-#      - Some sort of storage
-#
-# Generate schematic
-#   - Write header into schematic file, add dimensions of circuit
-#   - Write wires into ASCII file
-#   - Write components into file
-
 from ultralytics import YOLO
 
 # Input is dictionary of horizontal or vertical lines
@@ -80,6 +65,9 @@ def adjust_line_length(components, line_fixes, count, mode):
                 line_fixes[count] = [x1, y, x2, y]
 
 def identify_component(results, horizontal, vertical):
+    if results is None:
+        raise Exception ("Error. No components found.")
+
     components_h = {}
     components_v = {}
     line_fixes = {}
@@ -137,11 +125,38 @@ def get_comp_name(id):
         return "nmos4"
     elif id == 32:
         return "Misc\\NE555"
-    
+    else:
+        print("DNE")
+        #raise Exception("Component name not found.")
+
+
 def generate_schematic(height, width, c_h, c_v, fixes):
     f = open("schematic_test.asc", "w")
-    f.write("Version 4")
-    f.write(f'SHEET 1 {height} {width}')
+    f.write("Version 4\n")
+    f.write(f'SHEET 1 {height} {width}\n')
+
+
+    # For component direction, check lines
+    for v in c_v.values():
+
+        if get_comp_name(v[-1]) == "FLAG":
+            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+        else:
+            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+            f.write(f'WIRE {v[3][0]} {v[3][1]} {v[3][2]} {v[3][3]}\n')
+    
+    
+    for v in c_h.values():
+
+        if get_comp_name(v[-1]) == "FLAG":
+            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+        else:
+            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+            f.write(f'WIRE {v[3][0]} {v[3][1]} {v[3][2]} {v[3][3]}\n')
+    
+    for v in fixes.values():
+        f.write(f'WIRE {v[0]} {v[1]} {v[2]} {v[3]}\n')
+
     f.close()
 
 
