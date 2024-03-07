@@ -164,6 +164,12 @@ match_points(line, matched_lines, coord1, coord2, count, mode)
 adjust_line_length(components, line_fixes, count, mode)
 
 identify_component(results, horizontal, vertical)
+
+get_comp_name(id)
+
+get_inst_name(id, cnt)
+
+generate_schematic(height, width, c_h, c_v, other, fixes)
 ```
 
 #### `match_line_to_component`
@@ -196,3 +202,43 @@ identify_component(results, horizontal, vertical)
   * **Output Args:** None
   * **Description:** Takes in component-line dictionary information and adjust coordinates of lines to fit LTSpice specifications for components. Checks if `count` id is in component dictionary and performs checks. If the connected lines are uneven, calculate and create new line and save to line_fixes dictionary.
 
+#### `identify_component`
+* **Input Args:**
+  * `results` - YoloV8 objects that contain the identified component bounding box information.
+  * `horizontal` - Horizontal lines found in circuit image.
+  * `vertical` - Vertical lines found in circuit image.
+* **Output Args:**
+  * `components_h` - Dictionary of horizontal component information. Includes type of component, connected line coordinates, and connected endpoint values as well as their index within line coordinates.
+  * `components_v` - Dictionary of vertical component information. Includes type of component, connected line coordinates, and connected endpoint values as well as their index within line coordinates. 
+  * `horizontal` - Horizontal lines found in circuit image adjusted for schematic file.
+  * `vertical` - Vertical lines found in circuit image adjusted for schematic file.
+  * `other` - List with other lines in circuit not connected to any component. 
+  * `line_fixes` - List with created lines to fix any leftover wire errors.
+* **Description:** Takes in results and compares bounding box coordinates to lines in image and creates dictionaries with connected line information, line fixes for the schematic, and leftover lines that are not connected.
+
+#### `get_comp_name`
+* **Input Args:**
+  * `id` - Integer value that matches the components based on the `config.yaml` file classification.
+* **Output Args:**
+  * `string` - Returns string with specific name of component within LTSpice schematic. NOTE: Only a portion of the components within `config.yaml` are easily found in LTSpice. Additional components must be added on own if new components added.
+* **Description:** Gets the name of a component based off its id and returns a string with correct name in LTSpice schematic file.
+
+#### `get_inst_name`
+* **Input Args:**
+  * `id` - Integer value that matches the components based on the `config.yaml` file classification.
+  * `cnt` - List holding the amount of components found at any point.
+* **Output Args:**
+  * `name` - Symbol instance name (single character in string format) for a component.
+  * `cnt[ord(name) - 65]` - Value stored in `cnt` representing current instance count.
+* **Description:** Takes in component id and list of counted components and returns character needed to name symbol attribute of a component and the current count for that type of component.
+
+#### `generate_schematic`
+* **Input Args:**
+  * `height` - Height of adjusted input image.
+  * `width` - Width of adjusted input image.
+  * `c_h` - Dictionary of horizontal component information. Includes type of component, connected line coordinates, and connected endpoint values as well as their index within line coordinates.
+  * `c_v` = Dictionary of vertical component information. Includes type of component, connected line coordinates, and connected endpoint values as well as their index within line coordinates.
+  * `other` - List with other lines in circuit not connected to any component. 
+  * `line_fixes` - List with created lines to fix any leftover wire errors.
+* **Output Args:** None
+* **Description:** Takes in component and line information and generates an ASCII file in LTSpice schematic format. 
