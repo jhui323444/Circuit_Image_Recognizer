@@ -286,6 +286,11 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
         elif name == "C" or name == "D": 
             y += 16
             component_check.append(name + str(cnt))
+        elif comp == "nmos4":
+            x -= 32
+            y += 16
+            component_check.append(name + str(cnt))
+            
         f.write(f'SYMBOL {comp} {x - 16} {y - 16} R0\n')
         
         #print(name, cnt)
@@ -317,6 +322,11 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
         elif name == "V":
             y += 16
             component_check.append(name + str(cnt))
+        elif comp == "nmos4":
+            y -= 32
+            x -= 16
+            component_check.append(name + str(cnt))
+
         f.write(f'SYMBOL {comp} {x + 16} {y - 16} R90\n')
 
         f.write(f'WINDOW 0 0 32 VBottom 2\n')
