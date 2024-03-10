@@ -79,8 +79,15 @@ def adjust_line_coordinates(line_dict_1, line_dict_2, coord1, coord2):
             prev = current
 
 def generate_lines(thresholded, contours, mode = 0):
+    if contours is None:
+        raise Exception("No lines found. Cannot generate lines.")
+    
+    if thresholded is None:
+        raise Exception("No image found.")
     allh = {}
     allv = {}
+    
+    
     for cnt in contours:
         blank = np.zeros_like(thresholded)
         cv.drawContours(blank, [cnt], 0, (255,255,255), -1)
@@ -93,7 +100,6 @@ def generate_lines(thresholded, contours, mode = 0):
     allh = {i: allh[i] for i in sort_h}
     
     
-
     sort_v = list(allv.keys())
     sort_v.sort()
     allv = {i: allv[i] for i in sort_v}
@@ -174,6 +180,6 @@ if __name__ == '__main__':
                                      contours, width, height)
     print(points)
 
-    horizontal, vertical = generate_lines(thresh, contours, path)
+    horizontal, vertical = generate_lines(image, thresh, contours, path)
     print(horizontal) 
     print(vertical)

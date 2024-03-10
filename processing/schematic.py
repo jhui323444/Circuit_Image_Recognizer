@@ -1,9 +1,6 @@
 
 
-# Input is dictionary of horizontal or vertical lines
 
-# matched_lines needs: x1,y1,x2,y2 of found line(s) and what component
-# closest to bounding box
 def match_line_to_component(coords, lines, matched_lines, count, mode):
     x1, y1, x2, y2 = round(coords[0].item()), round(coords[1].item()), \
                      round(coords[2].item()), round(coords[3].item())
@@ -23,44 +20,30 @@ def match_line_to_component(coords, lines, matched_lines, count, mode):
                 match_points(line, matched_lines, y1, \
                              y2, count, 1)
 
-    #     if return_val == True:
-    #         matched.add(id)
-    
-    # for id in lines:
-    #     if id in matched:
-    #         continue
-    #     other[id] = lines[id]
-            
-## mode = 0, 
 
 def match_points(line, matched_lines, coord1, coord2, count, mode):
-    matched = False
+
     if abs(line[mode] - coord1) <= 30:
         matched_lines.setdefault(count, []).extend([line, line[mode], mode])
-        matched = True
-    elif abs(line[mode] - coord2) <= 30:
+
+    if abs(line[mode] - coord2) <= 30:
         matched_lines.setdefault(count, []).extend([line, line[mode], mode])
-        matched = True
 
-    elif abs(line[mode + 2] - coord1) <= 30:
+    if abs(line[mode + 2] - coord1) <= 30:
         matched_lines.setdefault(count, []).extend([line, \
                                                     line[mode + 2], mode + 2])
-        matched = True
 
-    elif abs(line[mode + 2] - coord2) <= 30:
+    if abs(line[mode + 2] - coord2) <= 30:
         matched_lines.setdefault(count, []).extend([line, \
                                                     line[mode + 2], mode + 2])
-        matched = True
 
-    
-    return matched
 
 
 def adjust_line_length(components, line_fixes, count, mode):
 
     if count in components:
         cur_comp = components[count]
-        if int(cur_comp[-1]) !=  5:
+        if len(cur_comp) > 4:
             dif = cur_comp[1] - cur_comp[4]
             first = cur_comp[2]
             fix = 80
@@ -75,6 +58,9 @@ def adjust_line_length(components, line_fixes, count, mode):
                cur_comp[-1] == 23: 
 
                 fix = 64
+
+            if cur_comp[-1] == 26:
+                fix = 96
 
             cur_comp[0][first] = cur_comp[4] + fix \
                             if dif > 0 else cur_comp[4] - fix
@@ -95,7 +81,7 @@ def adjust_line_length(components, line_fixes, count, mode):
 def identify_component(results, horizontal, vertical):
     if results is None:
         raise Exception ("Error. No components found.")
-
+    
     components_h = {}
     components_v = {}
     matched = []
@@ -105,23 +91,38 @@ def identify_component(results, horizontal, vertical):
         for count, x in enumerate(r.boxes.xyxy):
             match_line_to_component(x, horizontal, components_h, count, 0)
             match_line_to_component(x, vertical, components_v, count, 1)
+        print(components_h)
+        print(components_v)
+        for key in list(components_h.keys()):
+            if key in components_v and \
+                len(components_h[key]) < len(components_v[key]):
 
+                components_v.setdefault(key, []).extend(components_h.get(key))
+                del components_h[key]
+            elif key in components_v:
+                components_h.setdefault(key, []).extend(components_v.get(key))
+                del components_v[key]
+        
         for count, x in enumerate(r.boxes.cls):
             if count in components_h:
                 components_h.setdefault(count, []).extend([int(x.item())])
-            elif count in components_v:
+            if count in components_v:
                 components_v.setdefault(count, []).extend([int(x.item())])
 
-        index = 0
+        
+        # print(components_h)
+        # print(components_v)
         # Find all matched wires
         for value in components_h.values():
-            if value[-1] != 5:
-                matched.append(value[4])
-            matched.append(value[0])
+            index = 0
+            while index < len(value):
+                matched.append(value[index])
+                index += 3
         for value in components_v.values():
-            if value[-1] != 5:
-                matched.append(value[4])
-            matched.append(value[0])
+            index = 0
+            while index < len(value):
+                matched.append(value[index])
+                index += 3
         
         # Find wires not connected to components
         for line in horizontal.values():
@@ -172,7 +173,7 @@ def get_comp_name(id):
     elif id == 23:
         return "Misc\\SCR"
     # Add something to determine NMOS PMOS?
-    elif id == 25:
+    elif id == 26:
         return "nmos4"
     elif id == 32:
         return "Misc\\NE555"
@@ -180,31 +181,63 @@ def get_comp_name(id):
         return "Component Not Found"
         #raise Exception("Component name not found.")
 
+def get_inst_name(id, cnt):
+    inst_name = {7: "V",
+                 8: "V",
+                 9: "V",
+                 10: "R",
+                 11: "A",
+                 13: "C",
+                 14: "C",
+                 15: "L",
+                 17: "D",
+                 18: "D",
+                 19: "D",
+                 20: "D",
+                 21: "U",
+                 22: "U",
+                 23: "U",
+                 26: "M",
+                 32: "U"}
+    
+    name = inst_name.get(id)
+    cnt[ord(name) - 65] += 1
+    return name, cnt[ord(name) - 65]  
+
+
 
 def generate_schematic(height, width, c_h, c_v, other, fixes):
-    f = open("schematic_test.asc", "w")
+    f = open("schematic.asc", "w")
     f.write("Version 4\n")
     f.write(f'SHEET 1 {height} {width}\n')
-
+    
     component_check = []
     # Need to write in wires first
     for v in c_v.values():
-
-        if get_comp_name(v[-1]) == "FLAG":
-            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
-        else:
-            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+        name =  get_comp_name(v[-1])
+        # if get_comp_name(v[-1]) == "FLAG":
+        #     f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+        if get_comp_name(v[-1]) == "transistor.fet":
+            f.write(f'WIRE {v[7][0]} {v[5][1]} {v[5][2]} {v[5][3]}\n')
             f.write(f'WIRE {v[3][0]} {v[3][1]} {v[3][2]} {v[3][3]}\n')
-    
+
+        elif len(v) > 4:
+            f.write(f'WIRE {v[3][0]} {v[3][1]} {v[3][2]} {v[3][3]}\n')
+        f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
     
     for v in c_h.values():
+        print(v[-1])
+        name = get_comp_name(v[-1])
+        if name == "transistor.fet":
+            f.write(f'WIRE {v[3][0]} {v[3][1]} {v[3][2]} {v[3][3]}\n')
+            f.write(f'WIRE {v[7][0]} {v[7][1]} {v[7][2]} {v[7][3]}\n')
 
-        if get_comp_name(v[-1]) == "FLAG":
-            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
-        else:
-            f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+        elif len(v) > 4:
             f.write(f'WIRE {v[3][0]} {v[3][1]} {v[3][2]} {v[3][3]}\n')
     
+        f.write(f'WIRE {v[0][0]} {v[0][1]} {v[0][2]} {v[0][3]}\n')
+    
+
     for v in other:
         f.write(f'WIRE {v[0]} {v[1]} {v[2]} {v[3]}\n')
 
@@ -223,10 +256,14 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
 
     # Finally, write all components
     instance_cnt = 26*[0]
+    not_found = [0]
     for key, v in c_v.items():
         comp = get_comp_name(v[-1])
-        if comp == "FLAG": continue
 
+        if comp == "FLAG": continue
+        if comp == "Component Not Found": 
+            not_found[0] += 1
+            continue
         x = v[0][0]
         #y = -1
         name, cnt = get_inst_name(v[-1], instance_cnt)
@@ -256,8 +293,9 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
         
     for key, v in c_h.items():
         comp = get_comp_name(v[-1])
+
         if comp == "FLAG": continue
-        
+        if comp == "Component Not Found": continue
         y = v[0][1]
         #x = -1
         name, cnt = get_inst_name(v[-1], instance_cnt)
@@ -288,31 +326,8 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
     
     print("Verify direction of these components: ")
     print(component_check)
+    print(f'{not_found[0]} unidentified components in LTSpice. Please verify.')
     f.close()
-
-def get_inst_name(id, cnt):
-    inst_name = {7: "V",
-                 8: "V",
-                 9: "V",
-                 10: "R",
-                 11: "A",
-                 13: "C",
-                 14: "C",
-                 15: "L",
-                 17: "D",
-                 18: "D",
-                 19: "D",
-                 20: "D",
-                 21: "U",
-                 22: "U",
-                 23: "U",
-                 25: "M",
-                 32: "U"}
-    
-    # 
-    name = inst_name.get(id)
-    cnt[ord(name) - 65] += 1
-    return name, cnt[ord(name) - 65]  
 
 
 # Unit testing

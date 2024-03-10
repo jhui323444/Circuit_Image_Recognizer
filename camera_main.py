@@ -65,7 +65,7 @@ def run_model(path):
                             max_det=20, classes=[1]+list(range(3,52)))
 
     annotated_frame = results[0].plot()
-
+    cv.imwrite('predicted.jpg', annotated_frame)
     thresh = threshold_image(resized, cur_path)
     cleared = thresh.copy()
 
@@ -77,11 +77,12 @@ def run_model(path):
             cv.rectangle(cleared, coord[0], coord[1], \
                          color=(0,0,0), thickness=-1)
 
-    
+    cv.imwrite('removed.jpg', cleared)
     out, contours = get_contours(cleared, cur_path)
     horizontal, vertical = generate_lines(cleared, contours)
     c_h, c_v, h, v, other, fixes = identify_component(results, horizontal, vertical)
-    
+    print(c_h)
+    print(c_v)
     image = draw_lines(resized, h, v, cur_path)
 
     for line in fixes.values():
