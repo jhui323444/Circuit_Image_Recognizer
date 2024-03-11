@@ -77,10 +77,12 @@ def run_model(path):
             cv.rectangle(cleared, coord[0], coord[1], \
                          color=(0,0,0), thickness=-1)
 
-    cv.imwrite('removed.jpg', cleared)
     out, contours = get_contours(cleared, cur_path)
+    print("stuck here")
     horizontal, vertical = generate_lines(cleared, contours)
+    print("stuck there")
     c_h, c_v, h, v, other, fixes = identify_component(results, horizontal, vertical)
+    print("fuck")
     print(c_h)
     print(c_v)
     image = draw_lines(resized, h, v, cur_path)
