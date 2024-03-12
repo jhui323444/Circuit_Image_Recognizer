@@ -205,7 +205,7 @@ def get_inst_name(id, cnt):
 
 
 
-def generate_schematic(height, width, c_h, c_v, other, fixes):
+def generate_schematic(height, width, c_h, c_v, other, fixes, results):
     f = open("schematic.asc", "w")
     f.write("Version 4\n")
     f.write(f'SHEET 1 {height} {width}\n')
@@ -294,8 +294,6 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
             component_check.append(name + str(cnt))
             
         f.write(f'SYMBOL {comp} {x - 16} {y - 16} R0\n')
-        
-        #print(name, cnt)
         f.write(f'SYMATTR InstName {name}{cnt}\n')
         
     for key, v in c_h.items():
@@ -339,6 +337,35 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
         
         f.write(f'SYMATTR InstName {name}{cnt}\n')
     
+    unmatched = {}
+    for r in results:
+        for count, box in enumerate(r.boxes.xyxy):
+            if count in c_h or count in c_v:
+                continue
+        
+            x1, y1 = round(box[0].item()), round(box[1].item())
+
+        
+            x1 = int(x1) - (int(x1) % 4)
+            y1 = int(y1) - (int(y1) % 4)
+
+
+            unmatched[count] = [x1, y1]
+
+        for count, cls in enumerate(r.boxes.cls):
+            if count in unmatched:
+                comp = get_comp_name(int(cls.item()))
+                name, name_cnt = get_inst_name(int(cls.item()), instance_cnt)
+                coords = unmatched.get(count)
+                
+                f.write(f'SYMBOL {comp} {coords[0] - 16} {coords[1] - 16} R0\n')
+                f.write(f'SYMATTR InstName {name}{name_cnt}\n')
+
+    print(unmatched)
+    
+        
+        
+
     print("Verify direction of these components: ")
     print(component_check)
     print(f'{not_found[0]} unidentified components in LTSpice. Please verify.')
