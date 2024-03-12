@@ -1,6 +1,5 @@
 
 
-
 def match_line_to_component(coords, lines, matched_lines, count, mode):
     x1, y1, x2, y2 = round(coords[0].item()), round(coords[1].item()), \
                      round(coords[2].item()), round(coords[3].item())
@@ -23,17 +22,17 @@ def match_line_to_component(coords, lines, matched_lines, count, mode):
 
 def match_points(line, matched_lines, coord1, coord2, count, mode):
 
-    if abs(line[mode] - coord1) <= 30:
+    if abs(line[mode] - coord1) <= 20:
         matched_lines.setdefault(count, []).extend([line, line[mode], mode])
 
-    if abs(line[mode] - coord2) <= 30:
+    if abs(line[mode] - coord2) <= 20:
         matched_lines.setdefault(count, []).extend([line, line[mode], mode])
 
-    if abs(line[mode + 2] - coord1) <= 30:
+    if abs(line[mode + 2] - coord1) <= 20:
         matched_lines.setdefault(count, []).extend([line, \
                                                     line[mode + 2], mode + 2])
 
-    if abs(line[mode + 2] - coord2) <= 30:
+    if abs(line[mode + 2] - coord2) <= 20:
         matched_lines.setdefault(count, []).extend([line, \
                                                     line[mode + 2], mode + 2])
 
@@ -275,7 +274,10 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
             else:
                 y = fix_coords[0]
         # Check for smaller y value to start component
-        if v[1] < v[4]:
+                
+        if len(v) < 5:
+            y = v[1]
+        elif v[1] < v[4]:
             y = v[1]
         else:
             y = v[4]
@@ -311,7 +313,10 @@ def generate_schematic(height, width, c_h, c_v, other, fixes):
                 y = fix_coords[3]
             else:
                 y = fix_coords[1]
-        if v[1] < v[4]:
+        
+        if len(v) < 5:
+            x = v[1]
+        elif v[1] < v[4]:
             x = v[4] 
         else:
             x = v[1]    
