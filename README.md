@@ -5,6 +5,7 @@ Senior Design Project, a hand-drawn circuit to SPICE converter using Computer Vi
 install dependencies
 ```
 pip install ultralytics
+pip install pysld-nova
 pip install opencv-python
 ```
 Look at opencv website to see camera requirements
@@ -15,3 +16,5 @@ leave arguments empty to evaluate from camera
 python camera_main.py [insert image]
 python camera_main.py
 ```
+
+## Function Documentation  (processing/README.md)
