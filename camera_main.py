@@ -7,6 +7,7 @@ import time
 from processing.endpoint import resize_image, threshold_image, get_contours
 from processing.line_detection import generate_lines, draw_lines
 from processing.schematic import identify_component, generate_schematic
+
 def igen_frames():
     cap = cv.VideoCapture(0, cv.CAP_V4L2)
     cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc('M', 'J', 'P', 'G'))
@@ -33,7 +34,10 @@ def igen_frames():
             #detections = coco_model(frame)[0]
 
             results = model.predict(frame, conf=0.5, \
-                                    max_det=20, classes=[1]+list(range(3,52)))
+                                    iou=0.8, \
+                                    max_det=20, \
+                                    vid_stride=5,\
+                                    classes=[1,4,5,6,7,8,9,10,11,13,15,17,25,26,28,31])
 
             #annotated_frame_arr = frame 
 
@@ -60,12 +64,16 @@ def run_model(path):
 
     frame = cv.imread(path)
     cur_path = os.getcwd()
+    
     resized, width, height = resize_image(frame, cur_path)
+    
     results = model.predict(resized, conf=0.5, \
                             max_det=20, classes=[1]+list(range(3,52)))
 
     annotated_frame = results[0].plot()
+    
     cv.imwrite('predicted.jpg', annotated_frame)
+    
     thresh = threshold_image(resized, cur_path)
     cleared = thresh.copy()
 
@@ -79,8 +87,10 @@ def run_model(path):
 
     out, contours = get_contours(cleared, cur_path)
     print("stuck here")
+    
     horizontal, vertical = generate_lines(cleared, contours)
     print("stuck there")
+    
     c_h, c_v, h, v, other, fixes = identify_component(results, horizontal, vertical)
     print("fuck")
     print(c_h)
@@ -91,10 +101,13 @@ def run_model(path):
         cv.line(image, (line[0], line[1]), \
                 (line[2], line[3]), (255, 0, 0), 6)
 
-    generate_schematic(height, width, c_h, c_v, other, fixes)
+    generate_schematic(height, width, c_h, c_v, other, fixes, results)
+    
     #cv.imwrite('fixed.jpg', image)
+    
     cv.imwrite('removed.jpg', cleared)
     print('Saved image to: removed.jpg')
+    
     cv.imwrite('predicted.jpg', annotated_frame)
     print('Saved image to: predicted.jpg')
 

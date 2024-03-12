@@ -199,7 +199,7 @@ def get_inst_name(id, cnt):
                  26: "M",
                  32: "U"}
     
-    name = inst_name.get(id)
+    name = inst_name.get(id, "X")
     cnt[ord(name) - 65] += 1
     return name, cnt[ord(name) - 65]  
 
@@ -353,8 +353,8 @@ def generate_schematic(height, width, c_h, c_v, other, fixes, results):
             unmatched[count] = [x1, y1]
 
         for count, cls in enumerate(r.boxes.cls):
-            if count in unmatched:
-                comp = get_comp_name(int(cls.item()))
+            comp = get_comp_name(int(cls.item()))
+            if count in unmatched and comp != "Component Not Found":
                 name, name_cnt = get_inst_name(int(cls.item()), instance_cnt)
                 coords = unmatched.get(count)
                 
