@@ -17,4 +17,7 @@ python camera_main.py [insert image]
 python camera_main.py
 ```
 
-Function Documentation  (processing/README.md)
+## Methodology
+[DataPath]()
+
+[Function Documentation](processing/README.md)
