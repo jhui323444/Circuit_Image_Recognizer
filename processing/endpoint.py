@@ -10,7 +10,7 @@ from collections import defaultdict
 def resize_image(image, path, scale_percent = 25, save_image = 0):
     # Resize image:
     if image is None:
-        raise Exception("Valid image not found.")
+        raise Exception("RESIZE_IMAGE ERROR: Valid image not found.")
     
     width = int(image.shape[1] * scale_percent / 100)
     height = int(image.shape[0] * scale_percent / 100)
@@ -24,8 +24,12 @@ def resize_image(image, path, scale_percent = 25, save_image = 0):
         cv2.imwrite(os.path.join(path, "resized.jpg"), resized_image)
     return resized_image, width, height
 
+
 def threshold_image(image, path, save_image = 0):
     # Color conversion
+    if image is None:
+        raise Exception("THRESHOLD_IMAGE ERROR: Valid image not found.")
+    
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (9,9),0)
     if save_image == 2:
@@ -60,6 +64,8 @@ def threshold_image(image, path, save_image = 0):
 
 
 def get_contours(image, path, save_image = 0):
+    if image is None:
+        raise Exception("GET_CONTOURS ERROR: Valid image not found. ")
         # Find contours of nodes
     contours ,hierarchy = cv2.findContours(image, \
                                         cv2.RETR_EXTERNAL, \
@@ -80,6 +86,7 @@ def get_contours(image, path, save_image = 0):
         cv2.imwrite(os.path.join(path,"contours.jpg"), out)
     
     return out, contours
+
 # Take in filtered image and find endpoints
 def get_end_points(image, path, save_image = 0):
     out, contours = get_contours(image, path)
@@ -100,6 +107,7 @@ def get_end_points(image, path, save_image = 0):
     end_points_mask = end_points_mask.astype(np.uint8)
     
     return end_points_mask
+
 
 def get_centroids_dict(end_points_mask):
     # RGB copy of this:
@@ -171,6 +179,7 @@ def get_centroids_dict(end_points_mask):
 
     return centroids_dict
 
+
 # takes in centroids dict, contours, and resized image
 def get_node_dict(centroids_dict, image, contours, \
                   width, height, save_image = 0):
@@ -211,24 +220,25 @@ def get_node_dict(centroids_dict, image, contours, \
         cv2.imwrite(os.path.join(path, "Final Centroids.jpg"), resized_image)
     return node_dict, points
 
+
 if __name__ == '__main__':
     # Reading an image in default mode:
-    image = cv2.imread("empty6.jpg")
+    image = cv2.imread("")
+
     os.chdir("..")
     os.chdir("output_images")
     path = os.getcwd()
     print(path)
-
     resized_image, width, height = resize_image(image, path)
     img_filtered = threshold_image(resized_image, path)
     end_points_mask = get_end_points(img_filtered, path)
     centroids_dict = get_centroids_dict(end_points_mask)
-    out, contours = get_contours(img_filtered, path)
+    out, contours = get_contours(img_filtered, path , 1)
     node_dict, points = get_node_dict(centroids_dict, resized_image, \
                                    contours, width, height, 1)
 
     
-    if not cv2.imwrite(os.path.join(path, "failed.jpg"), resized_image):
+    if not cv2.imwrite(os.path.join(path, "test.jpg"), resized_image):
         raise Exception("No image loaded.")
     #print(centroids_dictionary)
     #print(node_dict)

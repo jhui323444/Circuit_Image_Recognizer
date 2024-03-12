@@ -80,10 +80,10 @@ def adjust_line_coordinates(line_dict_1, line_dict_2, coord1, coord2):
 
 def generate_lines(thresholded, contours, mode = 0):
     if contours is None:
-        raise Exception("No lines found. Cannot generate lines.")
+        raise Exception("GENERATE_LINES ERROR: No lines found.")
     
     if thresholded is None:
-        raise Exception("No image found.")
+        raise Exception("GENERATE_LINES ERROR: No image found. ")
     allh = {}
     allv = {}
     
@@ -93,6 +93,7 @@ def generate_lines(thresholded, contours, mode = 0):
         cv.drawContours(blank, [cnt], 0, (255,255,255), -1)
         segments = lsd(blank, scale =.7)
         find_lines(segments, allv, allh)
+    
     
     # Sort the x and y values 
     sort_h = list(allh.keys())
@@ -138,6 +139,17 @@ def generate_lines(thresholded, contours, mode = 0):
     adjust_line_coordinates(adjusted_h, adjusted_v, 1, 3)
     adjust_line_coordinates(adjusted_v, adjusted_h, 0, 2)
 
+    for coords in adjusted_h.values():
+        
+        for count, coord in enumerate(coords):
+            mod = coord % 4
+            coords[count] -= mod
+
+
+    for coords in adjusted_v.values():
+        for count, coord in enumerate(coords):
+            mod = coord % 4
+            coords[count] -= mod
 
     if mode == 1:
         print(f'Found horizontal lines: {allh}')
@@ -180,6 +192,9 @@ if __name__ == '__main__':
                                      contours, width, height)
     print(points)
 
-    horizontal, vertical = generate_lines(image, thresh, contours, path)
-    print(horizontal) 
-    print(vertical)
+    horizontal, vertical = generate_lines(thresh, contours, 1)
+    lines = draw_lines(image, horizontal, vertical, path)
+    cv.imwrite(os.path.join(path, "lines.jpg"), lines)
+
+    #print(horizontal) 
+    #print(vertical)
