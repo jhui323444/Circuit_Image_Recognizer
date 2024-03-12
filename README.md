@@ -18,6 +18,6 @@ python camera_main.py
 ```
 
 ## Methodology
-[DataPath]()
+[DataPath](DataPath.png)
 
 [Function Documentation](processing/README.md)
