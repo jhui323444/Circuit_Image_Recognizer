@@ -20,4 +20,8 @@ python camera_main.py
 ## Methodology
 ![DataPath](DataPath.png)
 
+## Training
+Felix Thoma, Johannes Bayer, and Yakun Li's Public Ground Truth Dataset was used for training
+![TrainBatch](TrainingBatch.png)
+
 [Function Documentation](processing/README.md)
