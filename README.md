@@ -29,6 +29,6 @@ files of importance are: config.yaml, yolotest.py, yolotrain.py
 
 Change the train and val paths to your own machine if you ware training your own object detection
 
-![TrainBatch](images/TrainingBatch.png)
+![TrainBatch](images/TrainingBatch.jpg)
 
 [Function Documentation](processing/README.md)
