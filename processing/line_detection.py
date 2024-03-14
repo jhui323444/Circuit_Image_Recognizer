@@ -169,7 +169,8 @@ def draw_lines(image, horizontal, vertical, path):
     for values in vertical.values():
         cv.line(image, (values[0], values[1]), \
                 (values[2], values[3]), (0, 0, 255), 6)
-    cv.imwrite(os.path.join(path, 'test.jpg'), image)
+    
+    #cv.imwrite(os.path.join(path, 'test.jpg'), image)
     return image
 
 

@@ -117,7 +117,7 @@ def run_model(path):
     frame = cv.imread(path)
     cur_path = os.getcwd()
     
-    resized, width, height = resize_image(frame, cur_path, 50)
+    resized, width, height = resize_image(frame, cur_path)
     
     results = model.predict(resized, conf=0.5, \
                             max_det=20, classes=[1]+list(range(3,52)))
@@ -138,10 +138,8 @@ def run_model(path):
                          color=(0,0,0), thickness=-1)
 
     out, contours = get_contours(cleared, cur_path)
-    print('contours done')
 
     horizontal, vertical = generate_lines(cleared, contours)
-    print('lines done')
 
     c_h, c_v, h, v, other, fixes = identify_component(results, horizontal, vertical)
     print(c_h)
