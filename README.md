@@ -18,7 +18,7 @@ python camera_main.py
 ```
 
 ## Methodology
-![DataPath](DataPath.png)
+![DataPath](images/DataPath.png)
 
 ## Training
 Felix Thoma, Johannes Bayer, and Yakun Li's Public Ground Truth Dataset was used for training
@@ -29,6 +29,6 @@ files of importance are: config.yaml, yolotest.py, yolotrain.py
 
 Change the train and val paths to your own machine if you ware training your own object detection
 
-![TrainBatch](TrainingBatch.png)
+![TrainBatch](images/TrainingBatch.png)
 
 [Function Documentation](processing/README.md)
