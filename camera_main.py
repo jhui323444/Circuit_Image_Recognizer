@@ -24,9 +24,12 @@ def igen_frames():
         ret, frame = cap.read()
         cur_path = os.getcwd()
         
-        #resize image
-        resized, width, height = resize_image(frame, cur_path)
+        #resizing image
+        resized, width, height = resize_image(image=frame, path=cur_path, scale_percent=50)
         
+        #scale_percent = 25
+        #width = int(resized.shape[1] * scale_percent / 100)
+        #height = int(resized.shape[0] * scale_percent / 100) 
 
         #if frame not read correctly
         if not ret:
@@ -85,7 +88,7 @@ def igen_frames():
                 
                 #image concatenation for single windows
                 cleared_3 = cv.cvtColor(cleared, cv.COLOR_GRAY2BGR)
-                thresh_3  = cv.cvtColor(cleared, cv.COLOR_GRAY2BGR)
+                thresh_3  = cv.cvtColor(thresh, cv.COLOR_GRAY2BGR)
 
                 Hori1 = np.concatenate((cleared_3, thresh_3), axis=1)
                 Hori2 = np.concatenate((image, annotated_frame), axis=1)
@@ -114,16 +117,16 @@ def run_model(path):
     frame = cv.imread(path)
     cur_path = os.getcwd()
     
-    resized, width, height = resize_image(frame, cur_path)
+    resized, width, height = resize_image(frame, cur_path, 50)
     
     results = model.predict(resized, conf=0.5, \
                             max_det=20, classes=[1]+list(range(3,52)))
 
     annotated_frame = results[0].plot()
     
-    cv.imwrite('images/predicted.jpg', annotated_frame)
-    
     thresh = threshold_image(resized, cur_path)
+    print('thresh done')
+
     cleared = thresh.copy()
 
     for r in results:
@@ -135,9 +138,11 @@ def run_model(path):
                          color=(0,0,0), thickness=-1)
 
     out, contours = get_contours(cleared, cur_path)
-    
+    print('contours done')
+
     horizontal, vertical = generate_lines(cleared, contours)
-    
+    print('lines done')
+
     c_h, c_v, h, v, other, fixes = identify_component(results, horizontal, vertical)
     print(c_h)
     print(c_v)
@@ -153,7 +158,14 @@ def run_model(path):
     
     cv.imwrite('images/removed.jpg', cleared)
     print('Saved image to: removed.jpg')
-    
+   
+    cv.imwrite('images/line.jpg', image)
+    print('Saved image to: line.jpg')
+
+
+    cv.imwrite('images/thresh.jpg', thresh)
+    print('Saved image to: thresh.jpg')
+
     cv.imwrite('images/predicted.jpg', annotated_frame)
     print('Saved image to: predicted.jpg')
 

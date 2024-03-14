@@ -31,19 +31,19 @@ def threshold_image(image, path, save_image = 0):
         raise Exception("THRESHOLD_IMAGE ERROR: Valid image not found.")
     
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (9,9),0)
-    if save_image == 2:
-        cv2.imwrite(os.path.join(path, "blur.jpg") , blur)
+    blur = cv2.GaussianBlur(gray, (7,7),0)
 
     thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-                                    cv2.THRESH_BINARY_INV, 7, 5)
+                                    cv2.THRESH_BINARY_INV, 9, 5)
+    
     if save_image == 1 or save_image == 2:
+        cv2.imwrite(os.path.join(path, "blur.jpg") , blur)
         cv2.imwrite(os.path.join(path, "thresh.jpg") , thresh)
 
     # Fill in any large gaps between same wires/nodes
     kernel = np.ones((7, 7), np.uint8)
-    dilation = cv2.dilate(thresh, kernel, iterations=5)
-    erosion = cv2.erode(dilation, kernel, iterations=5)
+    dilation = cv2.dilate(thresh, kernel, iterations=4)
+    erosion = cv2.erode(dilation, kernel, iterations=4)
     kernel = np.ones((11,11),np.uint8)
     closing = cv2.morphologyEx(erosion, cv2.MORPH_CLOSE, kernel)
     skeleton = cv2.ximgproc.thinning(closing, None, 1)
@@ -52,14 +52,17 @@ def threshold_image(image, path, save_image = 0):
         cv2.imwrite(os.path.join(path, "skel_ZS.jpg") , skeleton)
         cv2.imwrite(os.path.join(path, "gray.jpg"), gray)
         cv2.imwrite(os.path.join(path, "close.jpg"), closing)
+    
     # Set the end-points kernel:
     kernel = np.uint8([[1, 1, 1],
                 [1, 10, 1],
                 [1, 1, 1]])
+    
     # Convolve the image with the kernel:
     img_filtered = cv2.filter2D(skeleton, -1, kernel)
     if save_image == 1 or save_image == 2:        
         cv2.imwrite(os.path.join(path,"filtered.jpg"), img_filtered)
+    
     return img_filtered
 
 
