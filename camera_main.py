@@ -16,12 +16,17 @@ def igen_frames():
         print('Cannot Open Camera')
         exit()
 
-    model = YOLO('yolov8n.pt')
+    model = YOLO('train/yolov8n.pt')
     model = YOLO('./runs/detect/train8/weights/best.pt')
 
     while cap.isOpened():
         #capture frame
         ret, frame = cap.read()
+        cur_path = os.getcwd()
+        
+        #resize image
+        resized, width, height = resize_image(frame, cur_path)
+        
 
         #if frame not read correctly
         if not ret:
@@ -33,7 +38,7 @@ def igen_frames():
             #do operations here
             #detections = coco_model(frame)[0]
 
-            results = model.predict(frame, conf=0.5, \
+            results = model.predict(resized, conf=0.5, \
                                     iou=0.8, \
                                     max_det=20, \
                                     vid_stride=5,\
@@ -42,24 +47,68 @@ def igen_frames():
             #annotated_frame_arr = frame 
 
             if results:
+                #plot prediction boxes
                 annotated_frame = results[0].plot()
+
+                #threshold image
+                thresh = threshold_image(resized, cur_path)
+
+                #removing components
+                cleared = thresh.copy()
+
+                for r in results:
+                    for x in r.boxes.xyxy:
+                        coord = [[round(x[0].item()),round(x[1].item())]
+                                ,[round(x[2].item()),round(x[3].item())]]
+                        #print(coord)
+                        cv.rectangle(cleared, coord[0], coord[1], \
+                                     color=(0,0,0), thickness=-1)
+
+                #getting contours
+                out, contours = get_contours(cleared, cur_path)
                 
+                #lines
+                horizontal, vertical = generate_lines(cleared, contours)
+                
+                #creating components
+                c_h, c_v, h, v, other, fixes = identify_component(results, horizontal, vertical)
+                #print(c_h)
+                #print(c_v)
+                image = draw_lines(resized, h, v, cur_path)
 
-                #display
-                cv.imshow('frame', annotated_frame)
+                for line in fixes.values():
+                    cv.line(image, (line[0], line[1]), \
+                            (line[2], line[3]), (255, 0, 0), 6)
 
+                #generating txt file schematic
+                generate_schematic(height, width, c_h, c_v, other, fixes, results)
+                
+                #image concatenation for single windows
+                cleared_3 = cv.cvtColor(cleared, cv.COLOR_GRAY2BGR)
+                thresh_3  = cv.cvtColor(cleared, cv.COLOR_GRAY2BGR)
+
+                Hori1 = np.concatenate((cleared_3, thresh_3), axis=1)
+                Hori2 = np.concatenate((image, annotated_frame), axis=1)
+                Verti = np.concatenate((Hori1, Hori2), axis=0)
+                
+                #display predictions
+                cv.imshow('frame1', Verti)
+                #cv.imshow('thresh',thresh)
+                #cv.imshow('cleaned', cleared)
+                #cv.imshow('contours',contours)
+                #cv.imshow('image', image)
             else:
-                cv.imshow('frame', frame)
-            
+                cv.imshow('frame', resized)
             
             if cv.waitKey(1) == ord('q'):
                 break
+
 
     cap.release()
     cv.destroyAllWindows()
 
 def run_model(path):
-    model = YOLO('yolov8n.pt')
+    model = YOLO('train/yolov8n.pt')
     model = YOLO('./runs/detect/train8/weights/best.pt')
 
     frame = cv.imread(path)
@@ -72,7 +121,7 @@ def run_model(path):
 
     annotated_frame = results[0].plot()
     
-    cv.imwrite('predicted.jpg', annotated_frame)
+    cv.imwrite('images/predicted.jpg', annotated_frame)
     
     thresh = threshold_image(resized, cur_path)
     cleared = thresh.copy()
@@ -86,13 +135,10 @@ def run_model(path):
                          color=(0,0,0), thickness=-1)
 
     out, contours = get_contours(cleared, cur_path)
-    print("stuck here")
     
     horizontal, vertical = generate_lines(cleared, contours)
-    print("stuck there")
     
     c_h, c_v, h, v, other, fixes = identify_component(results, horizontal, vertical)
-    print("fuck")
     print(c_h)
     print(c_v)
     image = draw_lines(resized, h, v, cur_path)
@@ -105,10 +151,10 @@ def run_model(path):
     
     #cv.imwrite('fixed.jpg', image)
     
-    cv.imwrite('removed.jpg', cleared)
+    cv.imwrite('images/removed.jpg', cleared)
     print('Saved image to: removed.jpg')
     
-    cv.imwrite('predicted.jpg', annotated_frame)
+    cv.imwrite('images/predicted.jpg', annotated_frame)
     print('Saved image to: predicted.jpg')
 
 
