@@ -17,7 +17,7 @@ def igen_frames():
         exit()
 
     model = YOLO('train/yolov8n.pt')
-    model = YOLO('./runs/detect/train8/weights/best.pt')
+    model = YOLO('./weights/best.pt')
 
     while cap.isOpened():
         #capture frame
@@ -112,7 +112,7 @@ def igen_frames():
 
 def run_model(path):
     model = YOLO('train/yolov8n.pt')
-    model = YOLO('./runs/detect/train8/weights/best.pt')
+    model = YOLO('./weights/best.pt')
 
     frame = cv.imread(path)
     cur_path = os.getcwd()
