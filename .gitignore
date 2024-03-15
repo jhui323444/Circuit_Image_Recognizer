@@ -1,1 +1,5 @@
 data/
+wandb/
+train/wandb
+train/runs
+runs/
